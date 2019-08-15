@@ -13,7 +13,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val loginEnabled = TweakManager.instance.featureFlagEnabled()
-        helloText.text = "login enabled = $loginEnabled"
+        val tweaks = TweakManager.instance
+        booleanTweak.text = "login enabled = ${tweaks.featureFlagEnabled}"
+        intTweak.text = "animation duration = ${tweaks.animationDuration}"
     }
 }
