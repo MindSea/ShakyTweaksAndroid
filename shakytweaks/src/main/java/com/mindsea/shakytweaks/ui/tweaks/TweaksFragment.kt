@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.mindsea.shakytweaks.R
-import com.mindsea.shakytweaks.TweakProvider
+import com.mindsea.shakytweaks.ShakyTweaks
 import kotlinx.android.synthetic.main.fragment_tweaks.*
 import java.lang.IllegalStateException
 
@@ -28,7 +28,8 @@ internal class TweaksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val tweakGroupId = arguments?.getString(TWEAK_GROUP_ARG_PARAM) ?: throw IllegalStateException("tweak group must be present")
         setupRecyclerView()
-        viewModel = TweaksViewModel(TweakProvider.instance, tweakGroupId)
+        val libraryModule = ShakyTweaks.module()
+        viewModel = TweaksViewModel(libraryModule.tweakProvider(), libraryModule.tweakValueResolver(), tweakGroupId)
         viewModel.onUpdate = this::updateView
     }
 

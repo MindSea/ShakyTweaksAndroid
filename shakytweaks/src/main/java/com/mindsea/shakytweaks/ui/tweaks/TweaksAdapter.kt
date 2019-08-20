@@ -27,7 +27,7 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TweakViewHolder {
-        @LayoutRes val layoutId = when (viewType) {
+        @LayoutRes val layoutId: Int = when (viewType) {
             NUMERIC_VIEW_TYPE -> R.layout.item_numeric_tweak
             BOOLEAN_VIEW_TYPE -> R.layout.item_boolean_tweak
             STRING_VIEW_TYPE -> throw UnsupportedOperationException("not implemented")
