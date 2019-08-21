@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mindsea.shakytweaks.R
-import com.mindsea.shakytweaks.TweakProvider
+import com.mindsea.shakytweaks.ShakyTweaks
 import kotlinx.android.synthetic.main.fragment_tweak_groups.*
 
 internal class TweakGroupsFragment : Fragment() {
@@ -24,7 +24,7 @@ internal class TweakGroupsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        viewModel = TweakGroupsViewModel(TweakProvider.instance)
+        viewModel = TweakGroupsViewModel(ShakyTweaks.module().tweakProvider())
         viewModel.onUpdate = this::updateView
     }
 

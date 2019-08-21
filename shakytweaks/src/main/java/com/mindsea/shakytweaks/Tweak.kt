@@ -61,36 +61,39 @@ internal sealed class Tweak {
 
 }
 
-private val tweakProvider = TweakProvider.instance
+private val tweakProvider = ShakyTweaks.module().tweakProvider()
+private val tweakValueResolver: TweakValueResolver by lazy {
+    ShakyTweaks.module().tweakValueResolver()
+}
 
 private class BooleanTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, Boolean> {
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): Boolean = tweakProvider.getTypedValue(tweakId)
+    override fun getValue(thisRef: Any, property: KProperty<*>): Boolean = tweakValueResolver.getTypedValue(tweakId)
 }
 
 private class IntTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, Int> {
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): Int = tweakProvider.getTypedValue(tweakId)
+    override fun getValue(thisRef: Any, property: KProperty<*>): Int = tweakValueResolver.getTypedValue(tweakId)
 }
 
 private class FloatTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, Float> {
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): Float = tweakProvider.getTypedValue(tweakId)
+    override fun getValue(thisRef: Any, property: KProperty<*>): Float = tweakValueResolver.getTypedValue(tweakId)
 }
 
 private class DoubleTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, Double> {
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): Double = tweakProvider.getTypedValue(tweakId)
+    override fun getValue(thisRef: Any, property: KProperty<*>): Double = tweakValueResolver.getTypedValue(tweakId)
 }
 
 private class LongTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, Long> {
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): Long = tweakProvider.getTypedValue(tweakId)
+    override fun getValue(thisRef: Any, property: KProperty<*>): Long = tweakValueResolver.getTypedValue(tweakId)
 }
 
 private class StringTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, String> {
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): String = tweakProvider.getTypedValue(tweakId)
+    override fun getValue(thisRef: Any, property: KProperty<*>): String = tweakValueResolver.getTypedValue(tweakId)
 }
 
 fun booleanTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Boolean): ReadOnlyProperty<Any, Boolean> {

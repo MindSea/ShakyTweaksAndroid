@@ -1,7 +1,6 @@
 package com.mindsea.shakytweaks
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import com.mindsea.shakytweaks.ui.createTweaksActivityIntent
@@ -11,15 +10,15 @@ private const val SHARED_PREFERENCES_NAME = "shaky_tweaks"
 
 object ShakyTweaks {
 
-    internal var isInitialized: Boolean = false
-    private var sharedPreferences: SharedPreferences? = null
+    private var isInitialized: Boolean = false
+    private val moduleImpl = LibraryModuleImpl()
 
     fun init(context: Context) {
         if (isInitialized) {
             throw IllegalStateException("Shaky Tweaks must be initialized only once")
         }
         isInitialized = true
-        sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        moduleImpl.init(context)
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
@@ -31,7 +30,29 @@ object ShakyTweaks {
         sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
     }
 
-    internal fun sharedPreferences(): SharedPreferences {
-        return sharedPreferences ?: throw IllegalStateException("SharedPreferences must be initialized")
+    internal fun module(): LibraryModule = moduleImpl
+
+    /**
+     * Provides all dependencies for ShakyTweaks
+     */
+    internal interface LibraryModule {
+        fun tweakProvider(): TweakProvider
+        fun tweakValueResolver(): TweakValueResolver
+    }
+
+    private class LibraryModuleImpl : LibraryModule {
+
+        private val tweakProvider = TweakProvider()
+        private lateinit var tweakValueResolver: TweakValueResolver
+
+        fun init(context: Context) {
+            val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            tweakValueResolver = TweakValueResolver(tweakProvider, sharedPreferences)
+        }
+
+        override fun tweakProvider(): TweakProvider = tweakProvider
+
+        override fun tweakValueResolver(): TweakValueResolver = tweakValueResolver
     }
 }
+
