@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mindsea.shakytweaks">
+<manifest package="com.mindsea.shakytweaks">
 
-    <application>
-        <activity
-                android:name=".ui.TweaksActivity"
-                android:theme="@style/ShakyTweaksTheme"
-                android:screenOrientation="portrait"
-                android:launchMode="singleTop">
-        </activity>
-    </application>
+    <application/>
 
 </manifest>

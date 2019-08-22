@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.ShakyTweaks
-import kotlinx.android.synthetic.main.fragment_tweak_groups.*
+import kotlinx.android.synthetic.debug.fragment_tweak_groups.*
 
 internal class TweakGroupsFragment : Fragment() {
 

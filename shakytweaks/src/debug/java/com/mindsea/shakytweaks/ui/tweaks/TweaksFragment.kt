@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.ShakyTweaks
-import kotlinx.android.synthetic.main.fragment_tweaks.*
+import kotlinx.android.synthetic.debug.fragment_tweaks.*
 import java.lang.IllegalStateException
 
 private const val TWEAK_GROUP_ARG_PARAM = "TweaksFragment.tweak_group"

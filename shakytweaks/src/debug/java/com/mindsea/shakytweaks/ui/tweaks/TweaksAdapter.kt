@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.Tweak
 import com.mindsea.shakytweaks.ui.tweaks.TweakItemViewModel.*
-import kotlinx.android.synthetic.main.item_boolean_tweak.view.*
-import kotlinx.android.synthetic.main.item_numeric_tweak.view.*
-import kotlinx.android.synthetic.main.item_numeric_tweak.view.tweakDescription
+import kotlinx.android.synthetic.debug.item_boolean_tweak.view.*
+import kotlinx.android.synthetic.debug.item_numeric_tweak.view.*
+import kotlinx.android.synthetic.debug.item_numeric_tweak.view.tweakDescription
 
 private const val NUMERIC_VIEW_TYPE = 0
 private const val BOOLEAN_VIEW_TYPE = 1
