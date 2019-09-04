@@ -29,7 +29,7 @@ internal class TweaksViewModel(
                 when (tweak) {
                     is BooleanTweak -> BooleanTweakViewModel(tweak.id, tweak.description, tweakValueResolver)
                     is IntTweak, is LongTweak, is DoubleTweak, is FloatTweak -> NumberTweakViewModel(tweak.id, tweak.description, tweakValueResolver)
-                    else -> throw UnsupportedOperationException("Not supported")
+                    is StringTweak -> StringTweakViewModel(tweak.id, tweak.description, tweakValueResolver)
                 }
             }
         state = state.copy(tweaks = tweaks)
@@ -58,4 +58,14 @@ internal sealed class TweakItemViewModel {
             tweakValueResolver.updateValue(tweakId, value)
         }
     }
+
+    data class StringTweakViewModel(private val tweakId: String, val description: String, private val tweakValueResolver: TweakValueResolver) : TweakItemViewModel() {
+        val value: String
+            get() = tweakValueResolver.getTypedValue(tweakId)
+
+        fun setValue(value: String) {
+            tweakValueResolver.updateValue(tweakId, value)
+        }
+    }
+
 }
