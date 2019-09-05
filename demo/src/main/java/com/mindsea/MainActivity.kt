@@ -17,5 +17,8 @@ class MainActivity : AppCompatActivity() {
         booleanTweak.text = "login enabled = ${tweaks.featureFlagEnabled}"
         intTweak.text = "animation duration = ${tweaks.animationDuration}"
         stringTweak.text = "title = ${tweaks.title}"
+        val server = getString(tweaks.server)
+        stringResOptionsTweak.text = "Server = $server"
+        stringOptionsTweak.text = "Message = ${tweaks.messageOptions}"
     }
 }

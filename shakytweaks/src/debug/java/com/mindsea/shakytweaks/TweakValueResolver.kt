@@ -21,6 +21,8 @@ internal class TweakValueResolver(
             is Tweak.LongTweak -> sharedPreferences.getLong(key, tweak.defaultValue)
             is Tweak.FloatTweak -> sharedPreferences.getFloat(key, tweak.defaultValue)
             is Tweak.StringTweak -> sharedPreferences.getString(key, tweak.defaultValue)
+            is Tweak.StringResOptionsTweak -> sharedPreferences.getInt(key, tweak.defaultValue)
+            is Tweak.StringOptionsTweak -> sharedPreferences.getString(key, tweak.defaultValue)
         }
     }
 
@@ -39,7 +41,6 @@ internal class TweakValueResolver(
     }
 
     fun incrementValue(key: String) = incrementValueBy(key, 1)
-
 
     fun decrementValue(key: String) = incrementValueBy(key, -1)
 

@@ -1,5 +1,6 @@
 package com.mindsea.shakytweaks
 
+import androidx.annotation.StringRes
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -59,6 +60,22 @@ internal sealed class Tweak {
         override val group: String,
         override val description: String) : Tweak()
 
+    data class StringOptionsTweak(
+        override val id: String,
+        val defaultValue: String,
+        val options: Set<String>,
+        override val group: String,
+        override val description: String
+    ) : Tweak()
+
+    data class StringResOptionsTweak(
+        override val id: String,
+        @StringRes val defaultValue: Int,
+        val options: Set<Int>,
+        override val group: String,
+        override val description: String
+    ) : Tweak()
+
 }
 
 private val tweakProvider = ShakyTweaks.module().tweakProvider()
@@ -96,6 +113,16 @@ private class StringTweakDelegate(private val tweakId: String) : ReadOnlyPropert
     override fun getValue(thisRef: Any, property: KProperty<*>): String = tweakValueResolver.getTypedValue(tweakId)
 }
 
+private class StringOptionsTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, String> {
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): String = tweakValueResolver.getTypedValue(tweakId)
+}
+
+private class StringResOptionsTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, Int> {
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): Int = tweakValueResolver.getTypedValue(tweakId)
+}
+
 fun booleanTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Boolean): ReadOnlyProperty<Any, Boolean> {
     val tweak = Tweak.BooleanTweak(tweakId, defaultValue, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
@@ -130,4 +157,18 @@ fun stringTweak(tweakId: String, group: String, tweakDescription: String, defaul
     val tweak = Tweak.StringTweak(tweakId, defaultValue, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return StringTweakDelegate(tweakId)
+}
+
+fun stringOptionsTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: String, vararg otherOptions: String): ReadOnlyProperty<Any, String> {
+    val options = setOf(defaultValue, *otherOptions)
+    val tweak = Tweak.StringOptionsTweak(tweakId, defaultValue, options, group, tweakDescription)
+    tweakProvider.storeTweak(tweakId, tweak)
+    return StringOptionsTweakDelegate(tweakId)
+}
+
+fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: String, @StringRes defaultValue: Int, @StringRes vararg otherOptions: Int): ReadOnlyProperty<Any, Int> {
+    val options = setOf(defaultValue, *otherOptions.toTypedArray())
+    val tweak = Tweak.StringResOptionsTweak(tweakId, defaultValue, options, group, tweakDescription)
+    tweakProvider.storeTweak(tweakId, tweak)
+    return StringResOptionsTweakDelegate(tweakId)
 }

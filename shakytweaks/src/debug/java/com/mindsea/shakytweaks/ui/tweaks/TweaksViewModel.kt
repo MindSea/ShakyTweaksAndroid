@@ -12,24 +12,48 @@ internal class TweaksViewModel(
 ) {
 
     var onUpdate: ((TweaksState) -> Unit)? = null
-    set(value) {
-        field = value
-        value?.invoke(state)
-    }
+        set(value) {
+            field = value
+            value?.invoke(state)
+        }
 
     private var state: TweaksState = TweaksState(emptyList())
-    set(value) {
-        field = value
-        onUpdate?.invoke(value)
-    }
+        set(value) {
+            field = value
+            onUpdate?.invoke(value)
+        }
 
     init {
         val tweaks = tweakProvider.tweaks.filter { it.group == groupId }
             .map { tweak ->
                 when (tweak) {
-                    is BooleanTweak -> BooleanTweakViewModel(tweak.id, tweak.description, tweakValueResolver)
-                    is IntTweak, is LongTweak, is DoubleTweak, is FloatTweak -> NumberTweakViewModel(tweak.id, tweak.description, tweakValueResolver)
-                    is StringTweak -> StringTweakViewModel(tweak.id, tweak.description, tweakValueResolver)
+                    is BooleanTweak -> BooleanTweakViewModel(
+                        tweak.id,
+                        tweak.description,
+                        tweakValueResolver
+                    )
+                    is IntTweak, is LongTweak, is DoubleTweak, is FloatTweak -> NumberTweakViewModel(
+                        tweak.id,
+                        tweak.description,
+                        tweakValueResolver
+                    )
+                    is StringTweak -> StringTweakViewModel(
+                        tweak.id,
+                        tweak.description,
+                        tweakValueResolver
+                    )
+                    is StringOptionsTweak -> StringOptionsTweakViewModel(
+                        tweak.id,
+                        tweak.description,
+                        tweak.options.toList(),
+                        tweakValueResolver
+                    )
+                    is StringResOptionsTweak -> StringResOptionsTweakViewModel(
+                        tweak.id,
+                        tweak.description,
+                        tweak.options.toList(),
+                        tweakValueResolver
+                    )
                 }
             }
         state = state.copy(tweaks = tweaks)
@@ -41,7 +65,11 @@ internal data class TweaksState(val tweaks: List<TweakItemViewModel>)
 
 internal sealed class TweakItemViewModel {
 
-    data class NumberTweakViewModel(private val tweakId: String, val description: String, private val tweakValueResolver: TweakValueResolver) : TweakItemViewModel() {
+    data class NumberTweakViewModel(
+        private val tweakId: String,
+        val description: String,
+        private val tweakValueResolver: TweakValueResolver
+    ) : TweakItemViewModel() {
         val value: String
             get() = tweakValueResolver.getTypedValue<Number>(tweakId).toString()
 
@@ -50,7 +78,11 @@ internal sealed class TweakItemViewModel {
         fun decrementValue() = tweakValueResolver.decrementValue(tweakId)
     }
 
-    data class BooleanTweakViewModel(private val tweakId: String, val description: String, private val tweakValueResolver: TweakValueResolver) : TweakItemViewModel() {
+    data class BooleanTweakViewModel(
+        private val tweakId: String,
+        val description: String,
+        private val tweakValueResolver: TweakValueResolver
+    ) : TweakItemViewModel() {
         val value: Boolean
             get() = tweakValueResolver.getTypedValue(tweakId)
 
@@ -59,7 +91,11 @@ internal sealed class TweakItemViewModel {
         }
     }
 
-    data class StringTweakViewModel(private val tweakId: String, val description: String, private val tweakValueResolver: TweakValueResolver) : TweakItemViewModel() {
+    data class StringTweakViewModel(
+        private val tweakId: String,
+        val description: String,
+        private val tweakValueResolver: TweakValueResolver
+    ) : TweakItemViewModel() {
         val value: String
             get() = tweakValueResolver.getTypedValue(tweakId)
 
@@ -68,4 +104,39 @@ internal sealed class TweakItemViewModel {
         }
     }
 
+    data class StringOptionsTweakViewModel(
+        private val tweakId: String,
+        val description: String,
+        val options: List<String>,
+        private val tweakValueResolver: TweakValueResolver
+    ) : TweakItemViewModel() {
+        val selectedIndex: Int
+            get() {
+                val value = tweakValueResolver.getTypedValue<String>(tweakId)
+                return options.indexOf(value)
+            }
+
+        fun setValueAtIndex(index: Int) {
+            val value = options[index]
+            tweakValueResolver.updateValue(tweakId, value)
+        }
+    }
+
+    data class StringResOptionsTweakViewModel(
+        private val tweakId: String,
+        val description: String,
+        val options: List<Int>,
+        private val tweakValueResolver: TweakValueResolver
+    ) : TweakItemViewModel() {
+        val selectedIndex: Int
+            get() {
+                val value = tweakValueResolver.getTypedValue<Int>(tweakId)
+                return options.indexOf(value)
+            }
+
+        fun setValueAtIndex(index: Int) {
+            val value = options[index]
+            tweakValueResolver.updateValue(tweakId, value)
+        }
+    }
 }
