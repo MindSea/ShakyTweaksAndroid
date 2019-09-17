@@ -47,6 +47,7 @@ internal class TweakValueResolver(
             is Tweak.StringTweak -> sharedPreferences.getString(key, tweak.defaultValue)
             is Tweak.StringResOptionsTweak -> sharedPreferences.getInt(key, tweak.defaultValue)
             is Tweak.StringOptionsTweak -> sharedPreferences.getString(key, tweak.defaultValue)
+            is Tweak.ActionTweak -> tweak.action
         }
     }
 

@@ -24,6 +24,8 @@
 
 package com.mindsea
 
+import android.content.Context
+import android.widget.Toast
 import com.mindsea.shakytweaks.*
 
 class TweakManager {
@@ -37,6 +39,10 @@ class TweakManager {
     val server: Int by stringResOptionsTweak("server", "Server", "Server", R.string.prod_server, R.string.dev_server, R.string.stage_server)
 
     val messageOptions: String by stringOptionsTweak("message_options", "String Options", "Welcome Message", "First Welcome Message", "Second Welcome Message", "Third Welcome Message" )
+
+    val sampleAction: (Context) -> Unit by actionTweak("action", "Actions", "Show a toast") { context ->
+        Toast.makeText(context, "Shaky Tweaks rocks!", Toast.LENGTH_LONG).show()
+    }
 
     companion object {
         val instance = TweakManager()

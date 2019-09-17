@@ -60,8 +60,8 @@ allprojects {
         libraryMinSdkVersion = 17
         libraryTargetSdkVersion = 28
         libraryPackageName = 'com.mindsea.shakytweaks'
-        libraryVersionCode = 5
-        libraryVersionName = '0.4-alpha'
+        libraryVersionCode = 6
+        libraryVersionName = '0.5-alpha'
     }
 }
 

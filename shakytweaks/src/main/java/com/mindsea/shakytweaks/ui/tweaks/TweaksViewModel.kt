@@ -24,6 +24,7 @@
 
 package com.mindsea.shakytweaks.ui.tweaks
 
+import android.content.Context
 import com.mindsea.shakytweaks.Tweak.*
 import com.mindsea.shakytweaks.TweakProvider
 import com.mindsea.shakytweaks.TweakValueResolver
@@ -76,6 +77,11 @@ internal class TweaksViewModel(
                         tweak.id,
                         tweak.description,
                         tweak.options.toList(),
+                        tweakValueResolver
+                    )
+                    is ActionTweak -> ActionTweakViewModel(
+                        tweak.id,
+                        tweak.description,
                         tweakValueResolver
                     )
                 }
@@ -162,5 +168,14 @@ internal sealed class TweakItemViewModel {
             val value = options[index]
             tweakValueResolver.updateValue(tweakId, value)
         }
+    }
+
+    data class ActionTweakViewModel(
+        private val tweakId: String,
+        val description: String,
+        private val tweakValueResolver: TweakValueResolver
+    ) : TweakItemViewModel() {
+        val value: (Context) -> Unit
+            get() = tweakValueResolver.getTypedValue(tweakId)
     }
 }

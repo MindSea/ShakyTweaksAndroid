@@ -24,8 +24,8 @@
 
 package com.mindsea
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -44,5 +44,6 @@ class MainActivity : AppCompatActivity() {
         val server = getString(tweaks.server)
         stringResOptionsTweak.text = "Server = $server"
         stringOptionsTweak.text = "Message = ${tweaks.messageOptions}"
+        tweaks.sampleAction(this)
     }
 }

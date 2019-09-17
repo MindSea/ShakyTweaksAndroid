@@ -24,6 +24,7 @@
 
 package com.mindsea.shakytweaks
 
+import android.content.Context
 import androidx.annotation.StringRes
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -100,6 +101,12 @@ internal sealed class Tweak {
         override val description: String
     ) : Tweak()
 
+    data class ActionTweak(
+        override val id: String,
+        val action: (Context) -> Unit,
+        override val group: String,
+        override val description: String) : Tweak()
+
 }
 
 private val tweakProvider = ShakyTweaks.module().tweakProvider()
@@ -145,6 +152,11 @@ private class StringOptionsTweakDelegate(private val tweakId: String) : ReadOnly
 private class StringResOptionsTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, Int> {
 
     override fun getValue(thisRef: Any, property: KProperty<*>): Int = tweakValueResolver.getTypedValue(tweakId)
+}
+
+private class ActionTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, (Context) -> Unit> {
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): (Context) -> Unit = tweakValueResolver.getTypedValue(tweakId)
 }
 
 fun booleanTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Boolean): ReadOnlyProperty<Any, Boolean> {
@@ -195,4 +207,10 @@ fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: Stri
     val tweak = Tweak.StringResOptionsTweak(tweakId, defaultValue, options, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return StringResOptionsTweakDelegate(tweakId)
+}
+
+fun actionTweak(tweakId: String, group: String, tweakDescription: String, action: (Context) -> Unit): ReadOnlyProperty<Any, (Context) -> Unit> {
+    val tweak = Tweak.ActionTweak(tweakId, action, group, tweakDescription)
+    tweakProvider.storeTweak(tweakId, tweak)
+    return ActionTweakDelegate(tweakId)
 }
