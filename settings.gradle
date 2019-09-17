@@ -22,4 +22,4 @@
  * SOFTWARE.
  */
 
-include ':demo', ':shakytweaks'
+include ':demo', ':shakytweaks', ':shakytweaks-noop'
