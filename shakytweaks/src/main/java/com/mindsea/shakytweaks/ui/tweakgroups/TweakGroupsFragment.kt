@@ -22,38 +22,33 @@
  * SOFTWARE.
  */
 
-package com.mindsea.shakytweaks.ui.tweaks
+package com.mindsea.shakytweaks.ui.tweakgroups
 
-
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
-
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.ShakyTweaks
-import kotlinx.android.synthetic.debug.fragment_tweaks.*
-import java.lang.IllegalStateException
+import kotlinx.android.synthetic.main.fragment_tweak_groups.*
 
-private const val TWEAK_GROUP_ARG_PARAM = "TweaksFragment.tweak_group"
+internal class TweakGroupsFragment : Fragment() {
 
-internal class TweaksFragment : Fragment() {
-
-    private lateinit var viewModel: TweaksViewModel
-    private lateinit var adapter: TweaksAdapter
+    private var listener: TweakGroupsFragmentListener? = null
+    private lateinit var viewModel: TweakGroupsViewModel
+    private lateinit var adapter: TweakGroupsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_tweaks, container, false)
+        return inflater.inflate(R.layout.fragment_tweak_groups, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val tweakGroupId = arguments?.getString(TWEAK_GROUP_ARG_PARAM) ?: throw IllegalStateException("tweak group must be present")
         setupRecyclerView()
-        val libraryModule = ShakyTweaks.module()
-        viewModel = TweaksViewModel(libraryModule.tweakProvider(), libraryModule.tweakValueResolver(), tweakGroupId)
+        viewModel = TweakGroupsViewModel(ShakyTweaks.module().tweakProvider())
         viewModel.onUpdate = this::updateView
     }
 
@@ -62,22 +57,34 @@ internal class TweaksFragment : Fragment() {
         viewModel.onUpdate = null
     }
 
-    private fun updateView(state: TweaksState) {
-        adapter.setTweaks(state.tweaks)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is TweakGroupsFragmentListener) {
+            listener = context
+        } else {
+            throw RuntimeException("$context must implement TweakGroupsFragmentListener")
+        }
+    }
+
+    override fun onDetach() {
+        listener = null
+        super.onDetach()
     }
 
     private fun setupRecyclerView() {
-        adapter = TweaksAdapter()
-        tweaksRecyclerView.adapter = adapter
-        tweaksRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        adapter = TweakGroupsAdapter()
+        adapter.onTweakGroupSelected = { groupId ->
+            listener?.onGroupSelected(groupId)
+        }
+        tweakGroupsRecyclerView.adapter = adapter
+        tweakGroupsRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
-}
-
-internal fun createTweaksFragment(tweakGroupId: String): TweaksFragment {
-    val fragment = TweaksFragment()
-    fragment.arguments = Bundle().apply {
-        putString(TWEAK_GROUP_ARG_PARAM, tweakGroupId)
+    private fun updateView(state: TweakGroupsState) {
+        adapter.setTweakGroups(state.groups)
     }
-    return fragment
+
+    interface TweakGroupsFragmentListener {
+        fun onGroupSelected(groupId: String)
+    }
 }

@@ -35,9 +35,9 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.ui.tweaks.TweakItemViewModel.*
-import kotlinx.android.synthetic.debug.item_boolean_tweak.view.*
-import kotlinx.android.synthetic.debug.item_numeric_tweak.view.*
-import kotlinx.android.synthetic.debug.item_numeric_tweak.view.tweakDescription
+import kotlinx.android.synthetic.main.item_boolean_tweak.view.*
+import kotlinx.android.synthetic.main.item_numeric_tweak.view.*
+import kotlinx.android.synthetic.main.item_numeric_tweak.view.tweakDescription
 import kotlinx.android.synthetic.main.item_options_tweak.view.*
 import kotlinx.android.synthetic.main.item_string_tweak.view.*
 
