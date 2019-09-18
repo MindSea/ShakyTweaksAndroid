@@ -39,7 +39,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         val tweaks = TweakManager.instance
         booleanTweak.text = "login enabled = ${tweaks.featureFlagEnabled}"
-        intTweak.text = "animation duration = ${tweaks.animationDuration}"
+        numbersTweak.text = "Int = ${tweaks.intTweak}\n" +
+                "Float = ${tweaks.floatTweak}\n" +
+                "Double = ${tweaks.doubleTweak}\n" +
+                "Long = ${tweaks.longTweak}\n"
         stringTweak.text = "title = ${tweaks.title}"
         val server = getString(tweaks.server)
         stringResOptionsTweak.text = "Server = $server"

@@ -37,16 +37,20 @@ internal class TweakValueResolver(
         return getValue(key) as T? ?: throw IllegalArgumentException("Tweak with id $key registered with wrong type")
     }
 
+    inline fun <reified T> getTypedValueOptional(key: String): T? {
+        return getValue(key) as T?
+    }
+
     fun getValue(key: String): Any? {
         return when (val tweak = tweakProvider.findTweak(key)) {
-            is Tweak.BooleanTweak -> sharedPreferences.getBoolean(key, tweak.defaultValue)
-            is Tweak.IntTweak -> sharedPreferences.getInt(key, tweak.defaultValue)
-            is Tweak.DoubleTweak -> sharedPreferences.getDouble(key, tweak.defaultValue)
-            is Tweak.LongTweak -> sharedPreferences.getLong(key, tweak.defaultValue)
-            is Tweak.FloatTweak -> sharedPreferences.getFloat(key, tweak.defaultValue)
-            is Tweak.StringTweak -> sharedPreferences.getString(key, tweak.defaultValue)
-            is Tweak.StringResOptionsTweak -> sharedPreferences.getInt(key, tweak.defaultValue)
-            is Tweak.StringOptionsTweak -> sharedPreferences.getString(key, tweak.defaultValue)
+            is Tweak.BooleanTweak -> sharedPreferences.getBoolean(key, tweak.tweakValue)
+            is Tweak.IntTweak -> sharedPreferences.getInt(key, tweak.tweakValue)
+            is Tweak.DoubleTweak -> sharedPreferences.getDouble(key, tweak.tweakValue)
+            is Tweak.LongTweak -> sharedPreferences.getLong(key, tweak.tweakValue)
+            is Tweak.FloatTweak -> sharedPreferences.getFloat(key, tweak.tweakValue)
+            is Tweak.StringTweak -> sharedPreferences.getString(key, tweak.tweakValue)
+            is Tweak.StringResOptionsTweak -> sharedPreferences.getInt(key, tweak.tweakValue)
+            is Tweak.StringOptionsTweak -> sharedPreferences.getString(key, tweak.tweakValue)
             is Tweak.ActionTweak -> tweak.action
         }
     }

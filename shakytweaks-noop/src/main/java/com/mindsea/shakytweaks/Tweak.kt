@@ -29,42 +29,42 @@ import androidx.annotation.StringRes
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-private class TweakDefaultValueDelegate<T>(private val defaultValue: T) : ReadOnlyProperty<Any, T> {
+private class TweakDefaultValueDelegate<T>(private val releaseValue: T) : ReadOnlyProperty<Any?, T> {
 
-    override fun getValue(thisRef: Any, property: KProperty<*>): T = defaultValue
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T = releaseValue
 }
 
 @Suppress("UNUSED_PARAMETER")
-fun booleanTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Boolean): ReadOnlyProperty<Any, Boolean> =
-    TweakDefaultValueDelegate(defaultValue)
+fun booleanTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Boolean, tweakValue: Boolean? = null): ReadOnlyProperty<Any, Boolean> =
+    TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun intTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Int, minValue: Int, maxValue: Int, step: Int = 0): ReadOnlyProperty<Any, Int> =
-    TweakDefaultValueDelegate(defaultValue)
+fun intTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Int, minValue: Int, maxValue: Int, tweakValue: Int? = null, step: Int = 0): ReadOnlyProperty<Any, Int> =
+    TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun floatTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Float, minValue: Float, maxValue: Float, step: Float = 0F): ReadOnlyProperty<Any, Float> =
-    TweakDefaultValueDelegate(defaultValue)
+fun floatTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Float, minValue: Float, maxValue: Float, tweakValue: Float? = null, step: Float = 0F): ReadOnlyProperty<Any, Float> =
+    TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun doubleTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Double, minValue: Double, maxValue: Double, step: Double): ReadOnlyProperty<Any, Double> =
-    TweakDefaultValueDelegate(defaultValue)
+fun doubleTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Double, minValue: Double, maxValue: Double, tweakValue: Double? = null, step: Double): ReadOnlyProperty<Any, Double> =
+    TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun longTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Long, minValue: Long, maxValue: Long, step: Long): ReadOnlyProperty<Any, Long> =
-    TweakDefaultValueDelegate(defaultValue)
+fun longTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Long, minValue: Long, maxValue: Long, tweakValue: Long? = null, step: Long): ReadOnlyProperty<Any, Long> =
+    TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun stringTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: String): ReadOnlyProperty<Any, String> =
-    TweakDefaultValueDelegate(defaultValue)
+fun stringTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String? = null, tweakValue: String? = null): ReadOnlyProperty<Any, String?> =
+    TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun stringOptionsTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: String, vararg otherOptions: String): ReadOnlyProperty<Any, String> =
-    TweakDefaultValueDelegate(defaultValue)
+fun stringOptionsTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String, vararg otherOptions: String): ReadOnlyProperty<Any, String> =
+    TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: String, @StringRes defaultValue: Int, @StringRes vararg otherOptions: Int): ReadOnlyProperty<Any, Int> =
-    TweakDefaultValueDelegate(defaultValue)
+fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: String, @StringRes releaseValue: Int, @StringRes vararg otherOptions: Int): ReadOnlyProperty<Any, Int> =
+    TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun registerActionTweak(tweakId: String, group: String, tweakDescription: String, action: (Context) -> Unit) { }
+fun registerActionTweak(tweakId: String, group: String, tweakDescription: String, tweakAction: (Context) -> Unit) { }
