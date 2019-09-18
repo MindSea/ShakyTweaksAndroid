@@ -35,6 +35,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.ui.tweaks.TweakItemViewModel.*
+import kotlinx.android.synthetic.main.item_action_tweak.view.*
 import kotlinx.android.synthetic.main.item_boolean_tweak.view.*
 import kotlinx.android.synthetic.main.item_numeric_tweak.view.*
 import kotlinx.android.synthetic.main.item_numeric_tweak.view.tweakDescription
@@ -45,6 +46,7 @@ private const val NUMERIC_VIEW_TYPE = 0
 private const val BOOLEAN_VIEW_TYPE = 1
 private const val STRING_VIEW_TYPE = 2
 private const val OPTIONS_VIEW_TYPE = 3
+private const val ACTION_VIEW_TYPE = 4
 
 internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
 
@@ -62,6 +64,7 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
             BOOLEAN_VIEW_TYPE -> R.layout.item_boolean_tweak
             STRING_VIEW_TYPE -> R.layout.item_string_tweak
             OPTIONS_VIEW_TYPE -> R.layout.item_options_tweak
+            ACTION_VIEW_TYPE -> R.layout.item_action_tweak
             else -> throw UnsupportedOperationException("not implemented")
         }
 
@@ -75,6 +78,7 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
             is NumberTweakViewModel -> NUMERIC_VIEW_TYPE
             is StringTweakViewModel -> STRING_VIEW_TYPE
             is StringOptionsTweakViewModel, is StringResOptionsTweakViewModel -> OPTIONS_VIEW_TYPE
+            is ActionTweakViewModel -> ACTION_VIEW_TYPE
         }
     }
 
@@ -92,6 +96,7 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
             is StringTweakViewModel -> bindStringTweakView(itemView, itemViewModel)
             is StringOptionsTweakViewModel -> bindStringOptionsTweakView(itemView, itemViewModel)
             is StringResOptionsTweakViewModel -> bindStringOptionTweakView(itemView, itemViewModel)
+            is ActionTweakViewModel -> bindActionTweakView(itemView, itemViewModel)
 
         }
     }
@@ -184,6 +189,13 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
         itemView.tweakOptions.setOnCheckedChangeListener { _, checkedId ->
             val index = viewIds.indexOf(checkedId)
             itemViewModel.setValueAtIndex(index)
+        }
+    }
+
+    private fun bindActionTweakView(itemView: View, itemViewModel: ActionTweakViewModel) {
+        itemView.tweakDescription.text = itemViewModel.description
+        itemView.actionButton.setOnClickListener {
+            itemViewModel.value.invoke(it.context)
         }
     }
 }
