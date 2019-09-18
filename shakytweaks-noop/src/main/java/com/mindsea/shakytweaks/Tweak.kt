@@ -67,5 +67,4 @@ fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: Stri
     TweakDefaultValueDelegate(defaultValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun actionTweak(tweakId: String, group: String, tweakDescription: String, action: (Context) -> Unit): ReadOnlyProperty<Any, (Context) -> Unit> =
-    TweakDefaultValueDelegate { _: Context -> }
+fun actionTweak(tweakId: String, group: String, tweakDescription: String, action: (Context) -> Unit) { }

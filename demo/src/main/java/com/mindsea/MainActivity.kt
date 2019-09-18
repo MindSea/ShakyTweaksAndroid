@@ -44,6 +44,5 @@ class MainActivity : AppCompatActivity() {
         val server = getString(tweaks.server)
         stringResOptionsTweak.text = "Server = $server"
         stringOptionsTweak.text = "Message = ${tweaks.messageOptions}"
-        tweaks.sampleAction(this)
     }
 }

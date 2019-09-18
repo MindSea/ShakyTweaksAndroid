@@ -154,11 +154,6 @@ private class StringResOptionsTweakDelegate(private val tweakId: String) : ReadO
     override fun getValue(thisRef: Any, property: KProperty<*>): Int = tweakValueResolver.getTypedValue(tweakId)
 }
 
-private class ActionTweakDelegate(private val tweakId: String) : ReadOnlyProperty<Any, (Context) -> Unit> {
-
-    override fun getValue(thisRef: Any, property: KProperty<*>): (Context) -> Unit = tweakValueResolver.getTypedValue(tweakId)
-}
-
 fun booleanTweak(tweakId: String, group: String, tweakDescription: String, defaultValue: Boolean): ReadOnlyProperty<Any, Boolean> {
     val tweak = Tweak.BooleanTweak(tweakId, defaultValue, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
@@ -209,8 +204,7 @@ fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: Stri
     return StringResOptionsTweakDelegate(tweakId)
 }
 
-fun actionTweak(tweakId: String, group: String, tweakDescription: String, action: (Context) -> Unit): ReadOnlyProperty<Any, (Context) -> Unit> {
+fun actionTweak(tweakId: String, group: String, tweakDescription: String, action: (Context) -> Unit) {
     val tweak = Tweak.ActionTweak(tweakId, action, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
-    return ActionTweakDelegate(tweakId)
 }
