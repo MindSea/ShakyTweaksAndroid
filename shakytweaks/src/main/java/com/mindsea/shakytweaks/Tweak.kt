@@ -204,7 +204,7 @@ fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: Stri
     return StringResOptionsTweakDelegate(tweakId)
 }
 
-fun actionTweak(tweakId: String, group: String, tweakDescription: String, action: (Context) -> Unit) {
+fun registerActionTweak(tweakId: String, group: String, tweakDescription: String, action: (Context) -> Unit) {
     val tweak = Tweak.ActionTweak(tweakId, action, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
 }

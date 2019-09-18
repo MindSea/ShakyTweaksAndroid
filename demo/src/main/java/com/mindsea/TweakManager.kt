@@ -40,7 +40,7 @@ class TweakManager {
     val messageOptions: String by stringOptionsTweak("message_options", "String Options", "Welcome Message", "First Welcome Message", "Second Welcome Message", "Third Welcome Message" )
 
     init {
-        actionTweak("action", "Actions", "Show a toast") { context ->
+        registerActionTweak("action", "Actions", "Show a toast") { context ->
             Toast.makeText(context, "Shaky Tweaks rocks!", Toast.LENGTH_LONG).show()
         }
     }
