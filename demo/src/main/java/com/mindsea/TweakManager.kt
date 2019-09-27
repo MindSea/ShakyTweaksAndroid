@@ -29,15 +29,83 @@ import com.mindsea.shakytweaks.*
 
 class TweakManager {
 
-    val featureFlagEnabled: Boolean by booleanTweak("login_enabled", "Feature Flags", "Login Enabled", true)
+    val featureFlagEnabled: Boolean by booleanTweak(
+        tweakId = "login_enabled",
+        group = "Feature Flags",
+        tweakDescription = "Login Enabled",
+        releaseValue = true,
+        tweakValue = false
+    )
 
-    val animationDuration: Int by intTweak("animation_duration", "Animation Durations", "Fade Animation Duration", 300, 0, 1000, 50)
+    val intTweak: Int by intTweak(
+        tweakId = "numbers_int",
+        group = "Numbers",
+        tweakDescription = "Int",
+        releaseValue = 300,
+        minValue = 0,
+        maxValue = 1000,
+        tweakValue = 50,
+        step = 50
+    )
 
-    val title: String by stringTweak("title", "Strings", "Title of main screen", "Default Title")
+    val floatTweak: Float by floatTweak(
+        tweakId = "numbers_float",
+        group = "Numbers",
+        tweakDescription = "Float",
+        releaseValue = 300f,
+        minValue = 0f,
+        maxValue = 1000f,
+        tweakValue = 50f,
+        step = 50f
+    )
 
-    val server: Int by stringResOptionsTweak("server", "Server", "Server", R.string.prod_server, R.string.dev_server, R.string.stage_server)
+    val doubleTweak: Double by doubleTweak(
+        tweakId = "numbers_double",
+        group = "Numbers",
+        tweakDescription = "Double",
+        releaseValue = 300.0,
+        minValue = 0.0,
+        maxValue = 1000.0,
+        tweakValue = 50.0,
+        step = 50.0
+    )
 
-    val messageOptions: String by stringOptionsTweak("message_options", "String Options", "Welcome Message", "First Welcome Message", "Second Welcome Message", "Third Welcome Message" )
+    val longTweak: Long by longTweak(
+        tweakId = "numbers_long",
+        group = "Numbers",
+        tweakDescription = "Long",
+        releaseValue = 300,
+        minValue = 0,
+        maxValue = 1000,
+        tweakValue = 50,
+        step = 50
+    )
+
+    val title: String? by stringTweak(
+        tweakId = "title",
+        group = "Strings",
+        tweakDescription = "Title of main screen",
+        releaseValue = null,
+        tweakValue = "Tweaked"
+    )
+
+    val server: Int by stringResOptionsTweak(
+        "server",
+        "Server",
+        "Server",
+        R.string.prod_server,
+        R.string.dev_server,
+        R.string.stage_server
+    )
+
+    val messageOptions: String by stringOptionsTweak(
+        "message_options",
+        "String Options",
+        "Welcome Message",
+        "First Welcome Message",
+        "Second Welcome Message",
+        "Third Welcome Message"
+    )
 
     init {
         registerActionTweak("action", "Actions", "Show a toast") { context ->
