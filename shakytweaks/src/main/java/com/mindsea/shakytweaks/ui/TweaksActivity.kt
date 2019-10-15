@@ -28,18 +28,24 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import com.mindsea.shakytweaks.R
+import com.mindsea.shakytweaks.ShakyTweaks
 import com.mindsea.shakytweaks.ui.TweakActivitySection.*
 import com.mindsea.shakytweaks.ui.tweakgroups.TweakGroupsFragment
 import com.mindsea.shakytweaks.ui.tweaks.createTweaksFragment
 
 internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGroupsFragmentListener {
 
-    private val viewModel = TweaksActivityViewModel()
+    private lateinit var viewModel: TweaksActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tweaks)
+        val libraryModule = ShakyTweaks.module()
+        viewModel = TweaksActivityViewModel(libraryModule.tweakValueResolver())
         supportActionBar?.let {
             it.title = resources.getString(R.string.tweaks_title)
             it.setDisplayHomeAsUpEnabled(true)
@@ -57,6 +63,21 @@ internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGr
     override fun onSupportNavigateUp(): Boolean {
         viewModel.backPressed()
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.tweaks_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_reset_tweaks -> {
+                displayResetTweaksConfirmationDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onBackPressed() {
@@ -91,6 +112,17 @@ internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGr
             }
         }
     }
+
+    private fun displayResetTweaksConfirmationDialog() = AlertDialog.Builder(this)
+        .setTitle(R.string.dialog_title)
+        .setPositiveButton(R.string.dialog_confirm_action) { _, _ ->
+            viewModel.resetTweaks()
+        }
+        .setNegativeButton(R.string.dialog_cancel_action ) { _, _ ->
+            // Do nothing
+        }
+        .create()
+        .show()
 }
 
 internal fun createTweaksActivityIntent(context: Context) = Intent(context, TweaksActivity::class.java).apply {
