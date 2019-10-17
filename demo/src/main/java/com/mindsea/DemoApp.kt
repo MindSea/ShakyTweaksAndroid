@@ -32,5 +32,6 @@ class DemoApp : Application() {
     override fun onCreate() {
         super.onCreate()
         ShakyTweaks.init(applicationContext)
+        TweakManager.instance.init(applicationContext)
     }
 }

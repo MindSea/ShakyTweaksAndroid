@@ -103,7 +103,7 @@ internal sealed class Tweak {
 
     data class ActionTweak(
         override val id: String,
-        val action: (Context) -> Unit,
+        val action: () -> Unit,
         override val group: String,
         override val description: String) : Tweak()
 
@@ -204,7 +204,11 @@ fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: Stri
     return StringResOptionsTweakDelegate(tweakId)
 }
 
-fun registerActionTweak(tweakId: String, group: String, tweakDescription: String, tweakAction: (Context) -> Unit) {
+fun registerActionTweak(tweakId: String, group: String, tweakDescription: String, tweakAction: () -> Unit) {
     val tweak = Tweak.ActionTweak(tweakId, tweakAction, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
+}
+
+fun unregisterActionTweak(tweakId: String) {
+    tweakProvider.removeTweak(tweakId)
 }

@@ -195,7 +195,7 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
     private fun bindActionTweakView(itemView: View, itemViewModel: ActionTweakViewModel) {
         itemView.tweakDescription.text = itemViewModel.description
         itemView.actionButton.setOnClickListener {
-            itemViewModel.value.invoke(it.context)
+            itemViewModel.value.invoke()
         }
     }
 }

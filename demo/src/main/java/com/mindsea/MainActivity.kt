@@ -24,28 +24,52 @@
 
 package com.mindsea
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.mindsea.shakytweaks.registerActionTweak
+import com.mindsea.shakytweaks.unregisterActionTweak
 import kotlinx.android.synthetic.main.activity_main.*
+
+private const val localActionKey = "local_action_key"
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        button.setOnClickListener {
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
+        }
+
+        registerActionTweak(localActionKey, "Actions", "Display a button") {
+            Toast.makeText(this, "Second Activity button visible!", Toast.LENGTH_LONG).show()
+            button.visibility = View.VISIBLE
+        }
     }
 
     override fun onResume() {
         super.onResume()
         val tweaks = TweakManager.instance
         booleanTweak.text = "login enabled = ${tweaks.featureFlagEnabled}"
-        numbersTweak.text = "Int = ${tweaks.intTweak}\n" +
-                "Float = ${tweaks.floatTweak}\n" +
-                "Double = ${tweaks.doubleTweak}\n" +
-                "Long = ${tweaks.longTweak}\n"
+        numbersTweak.text = """
+            Int = ${tweaks.intTweak}
+            Float = ${tweaks.floatTweak}
+            Double = ${tweaks.doubleTweak}
+            Long = ${tweaks.longTweak}
+        """.trimIndent()
         stringTweak.text = "title = ${tweaks.title}"
         val server = getString(tweaks.server)
         stringResOptionsTweak.text = "Server = $server"
         stringOptionsTweak.text = "Message = ${tweaks.messageOptions}"
+    }
+
+    override fun onDestroy() {
+        unregisterActionTweak(localActionKey)
+        super.onDestroy()
     }
 }

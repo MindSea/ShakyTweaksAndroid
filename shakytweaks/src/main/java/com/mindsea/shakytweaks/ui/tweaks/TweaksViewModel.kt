@@ -175,7 +175,7 @@ internal sealed class TweakItemViewModel {
         val description: String,
         private val tweakValueResolver: TweakValueResolver
     ) : TweakItemViewModel() {
-        val value: (Context) -> Unit
+        val value: () -> Unit
             get() = tweakValueResolver.getTypedValue(tweakId)
     }
 }

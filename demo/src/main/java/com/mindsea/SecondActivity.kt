@@ -22,30 +22,15 @@
  * SOFTWARE.
  */
 
-package com.mindsea.shakytweaks
+package com.mindsea
 
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 
-internal class TweakProvider {
+class SecondActivity : AppCompatActivity() {
 
-    private val tweakMap: MutableMap<String, Tweak> = mutableMapOf()
-
-    val tweaks: List<Tweak>
-    get() = tweakMap.map { it.value }
-
-    fun storeTweak(key: String, tweak: Tweak) {
-        if (tweakMap.containsKey(key)) {
-            throw IllegalStateException("Tweak key must be unique. Key $key was already added")
-        }
-        Log.d("ShakyTweaks", "Storing $tweak with key $key")
-        tweakMap[key] = tweak
-    }
-
-    fun removeTweak(tweakId: String) {
-        tweakMap.remove(tweakId)
-    }
-
-    fun findTweak(key: String): Tweak {
-        return tweakMap[key] ?: throw IllegalStateException("Could not find tweak with key $key")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_second)
     }
 }
