@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
   ~ Copyright (c) 2019 MindSea
@@ -22,14 +22,11 @@
   ~ SOFTWARE.
   -->
 
-<resources>
-    <string name="tweaks_title">Tweaks</string>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <string name="reset_tweaks_option">Reset</string>
-
-    <string name="dialog_title">Reset all tweaks to their default values?</string>
-
-    <string name="dialog_confirm_action">Confirm</string>
-
-    <string name="dialog_cancel_action">Cancel</string>
-</resources>
+    <item
+            android:id="@+id/menu_reset_tweaks"
+            android:title="@string/reset_tweaks_option"
+            app:showAsAction="always" />
+</menu>

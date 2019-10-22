@@ -24,7 +24,11 @@
 
 package com.mindsea.shakytweaks.ui
 
-internal class TweaksActivityViewModel {
+import com.mindsea.shakytweaks.TweakValueResolver
+
+internal class TweaksActivityViewModel(
+    private val tweakValueResolver: TweakValueResolver
+) {
 
     var onUpdate: ((TweaksActivityState) -> Unit)? = null
     set(value) {
@@ -54,6 +58,10 @@ internal class TweaksActivityViewModel {
 
     fun groupSelected(groupId: String) {
         state = state.copy(currentSection = TweakActivitySection.Tweaks(groupId), previousSection = state.currentSection)
+    }
+
+    fun resetTweaks() {
+        tweakValueResolver.resetAllTweaks()
     }
 }
 

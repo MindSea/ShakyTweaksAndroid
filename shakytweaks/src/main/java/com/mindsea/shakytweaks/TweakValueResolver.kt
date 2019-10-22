@@ -69,6 +69,15 @@ internal class TweakValueResolver(
         editor.apply()
     }
 
+    fun resetAllTweaks() {
+        val edit = sharedPreferences.edit()
+        tweakProvider.tweaks.map(Tweak::id)
+            .forEach { key ->
+                edit.remove(key)
+            }
+        edit.apply()
+    }
+
     fun incrementValue(key: String) = incrementValueBy(key, 1)
 
     fun decrementValue(key: String) = incrementValueBy(key, -1)
