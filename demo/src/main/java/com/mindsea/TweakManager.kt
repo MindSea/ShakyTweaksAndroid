@@ -24,6 +24,7 @@
 
 package com.mindsea
 
+import android.content.Context
 import android.widget.Toast
 import com.mindsea.shakytweaks.*
 
@@ -107,8 +108,8 @@ class TweakManager {
         "Third Welcome Message"
     )
 
-    init {
-        registerActionTweak("action", "Actions", "Show a toast") { context ->
+    fun init(context: Context) {
+        registerActionTweak("action", "Actions", "Show a toast") {
             Toast.makeText(context, "Shaky Tweaks rocks!", Toast.LENGTH_LONG).show()
         }
     }
