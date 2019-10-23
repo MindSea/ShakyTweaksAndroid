@@ -24,7 +24,6 @@
 
 package com.mindsea.shakytweaks
 
-import android.content.Context
 import androidx.annotation.StringRes
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -67,7 +66,7 @@ fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: Stri
     TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun registerActionTweak(tweakId: String, group: String, tweakDescription: String, tweakAction: (Context) -> Unit) {
+fun registerActionTweak(tweakId: String, group: String, tweakDescription: String, tweakAction: () -> Unit) {
     // Do nothing
 }
 
