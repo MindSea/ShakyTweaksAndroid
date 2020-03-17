@@ -80,4 +80,4 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
-**/*/.DS_Store
+**/.DS_Store

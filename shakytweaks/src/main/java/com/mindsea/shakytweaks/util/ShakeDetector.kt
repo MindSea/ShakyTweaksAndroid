@@ -30,8 +30,8 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import java.lang.Math.sqrt
 
-private const val SHAKE_THRESHOLD_GRAVITY = 2.7f
-private val SHAKE_SLOP_TIME_MS = 500
+private const val SHAKE_THRESHOLD_GRAVITY = 2.3f
+private const val SHAKE_SLOP_TIME_MS = 300
 
 /**
  * approach described on https://jasonmcreynolds.com/?p=388
@@ -58,7 +58,7 @@ internal class ShakeDetector : SensorEventListener {
         }
 
         val now = System.currentTimeMillis()
-        // ignore shake events too close to each other (500ms)
+        // ignore shake events too close to each other
         if (shakeTimestamp + SHAKE_SLOP_TIME_MS > now) {
             return
         }

@@ -26,9 +26,11 @@ package com.mindsea
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.mindsea.shakytweaks.ShakyTweaks
 import com.mindsea.shakytweaks.registerActionTweak
 import com.mindsea.shakytweaks.unregisterActionTweak
 import kotlinx.android.synthetic.main.activity_main.*
@@ -50,6 +52,12 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Second Activity button visible!", Toast.LENGTH_LONG).show()
             button.visibility = View.VISIBLE
         }
+
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        ShakyTweaks.onKeyDown(this, keyCode)
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onResume() {

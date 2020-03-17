@@ -8,4 +8,9 @@ object ShakyTweaks {
     fun init(context: Context) {
         // Do nothing
     }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun onKeyDown(context: Context, keyCode: Int) {
+        // Do nothing
+    }
 }

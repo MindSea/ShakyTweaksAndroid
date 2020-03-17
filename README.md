@@ -15,6 +15,21 @@ Just two steps:
 
 Check out the sample app in `demo/` to see it in action.
 
+###  Simulator Usage
+
+To enable easy access from Android Simulator, forward `onKeyDown` from your activities into `ShakyTweaks.onKeyDown`
+```kotlin
+class BaseActivity : AppCompatActivity() {
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        ShakyTweaks.onKeyDown(this, keyCode)
+        return super.onKeyDown(keyCode, event)
+    }
+}
+```
+
+You will have access to Shaky Tweaks with `S` + `T` from the activities `onKeyDown` is forwarded. The keys must be
+pressed simultaneously. The shortcut doesn't work if there is an active input field.
+
 
 Samples
 ----

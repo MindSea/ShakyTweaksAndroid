@@ -24,7 +24,6 @@
 
 package com.mindsea.shakytweaks
 
-import android.content.Context
 import androidx.annotation.StringRes
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -185,7 +184,7 @@ fun longTweak(tweakId: String, group: String, tweakDescription: String, releaseV
 }
 
 fun stringTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String? = null, tweakValue: String? = null): ReadOnlyProperty<Any, String?> {
-    val tweak = Tweak.StringTweak(tweakId, tweakValue, group, tweakDescription)
+    val tweak = Tweak.StringTweak(tweakId, tweakValue ?: releaseValue, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return StringTweakDelegate(tweakId)
 }
