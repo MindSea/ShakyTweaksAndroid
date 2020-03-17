@@ -153,38 +153,38 @@ private class StringResOptionsTweakDelegate(private val tweakId: String) : ReadO
     override fun getValue(thisRef: Any, property: KProperty<*>): Int = tweakValueResolver.getTypedValue(tweakId)
 }
 
-fun booleanTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Boolean, tweakValue: Boolean? = null): ReadOnlyProperty<Any, Boolean> {
-    val tweak = Tweak.BooleanTweak(tweakId, tweakValue ?: releaseValue, group, tweakDescription)
+fun booleanTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Boolean, defaultTweakValue: Boolean? = null): ReadOnlyProperty<Any, Boolean> {
+    val tweak = Tweak.BooleanTweak(tweakId, defaultTweakValue ?: releaseValue, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return BooleanTweakDelegate(tweakId)
 }
 
-fun intTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Int, minValue: Int, maxValue: Int, tweakValue: Int? = null, step: Int = 0): ReadOnlyProperty<Any, Int>  {
-    val tweak = Tweak.IntTweak(tweakId, tweakValue ?: releaseValue, minValue, maxValue, step, group, tweakDescription)
+fun intTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Int, minValue: Int, maxValue: Int, defaultTweakValue: Int? = null, step: Int = 0): ReadOnlyProperty<Any, Int>  {
+    val tweak = Tweak.IntTweak(tweakId, defaultTweakValue ?: releaseValue, minValue, maxValue, step, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return IntTweakDelegate(tweakId)
 }
 
-fun floatTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Float, minValue: Float, maxValue: Float, tweakValue: Float? = null, step: Float = 0F): ReadOnlyProperty<Any, Float>  {
-    val tweak = Tweak.FloatTweak(tweakId, tweakValue ?: releaseValue, minValue, maxValue, step, group, tweakDescription)
+fun floatTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Float, minValue: Float, maxValue: Float, defaultTweakValue: Float? = null, step: Float = 0F): ReadOnlyProperty<Any, Float>  {
+    val tweak = Tweak.FloatTweak(tweakId, defaultTweakValue ?: releaseValue, minValue, maxValue, step, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return FloatTweakDelegate(tweakId)
 }
 
-fun doubleTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Double, minValue: Double, maxValue: Double, tweakValue: Double? = null, step: Double): ReadOnlyProperty<Any, Double>  {
-    val tweak = Tweak.DoubleTweak(tweakId, tweakValue ?: releaseValue, minValue, maxValue, step, group, tweakDescription)
+fun doubleTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Double, minValue: Double, maxValue: Double, defaultTweakValue: Double? = null, step: Double): ReadOnlyProperty<Any, Double>  {
+    val tweak = Tweak.DoubleTweak(tweakId, defaultTweakValue ?: releaseValue, minValue, maxValue, step, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return DoubleTweakDelegate(tweakId)
 }
 
-fun longTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Long, minValue: Long, maxValue: Long, tweakValue: Long? = null, step: Long): ReadOnlyProperty<Any, Long>  {
-    val tweak = Tweak.LongTweak(tweakId, tweakValue ?: releaseValue, minValue, maxValue, step, group, tweakDescription)
+fun longTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: Long, minValue: Long, maxValue: Long, defaultTweakValue: Long? = null, step: Long): ReadOnlyProperty<Any, Long>  {
+    val tweak = Tweak.LongTweak(tweakId, defaultTweakValue ?: releaseValue, minValue, maxValue, step, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return LongTweakDelegate(tweakId)
 }
 
-fun stringTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String? = null, tweakValue: String? = null): ReadOnlyProperty<Any, String?> {
-    val tweak = Tweak.StringTweak(tweakId, tweakValue ?: releaseValue, group, tweakDescription)
+fun stringTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String? = null, defaultTweakValue: String? = null): ReadOnlyProperty<Any, String?> {
+    val tweak = Tweak.StringTweak(tweakId, defaultTweakValue ?: releaseValue, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return StringTweakDelegate(tweakId)
 }

@@ -43,7 +43,7 @@ val aBooleanValue: Boolean by booleanTweak(
     group = "Group Name",
     tweakDescription = "A description...",
     releaseValue = true, // value for release builds
-    tweakValue = false // value for debug builds
+    defaultTweakValue = false // value for debug builds
 )
 ```
 
@@ -56,7 +56,7 @@ val intValue: Int by intTweak(
     releaseValue = 300,
     minValue = 0,
     maxValue = 1000,
-    tweakValue = 50,
+    defaultTweakValue = 50,
     step = 50 // increment by
 )
 ```
@@ -70,7 +70,7 @@ val floatValue: Float by floatTweak(
     releaseValue = 300f,
     minValue = 0f,
     maxValue = 1000f,
-    tweakValue = 50f,
+    defaultTweakValue = 50f,
     step = 50f
 )
 ```
@@ -84,7 +84,7 @@ val doubleValue: Double by doubleTweak(
     releaseValue = 300.0,
     minValue = 0.0,
     maxValue = 1000.0,
-    tweakValue = 50.0,
+    defaultTweakValue = 50.0,
     step = 50.0
 )
 ```
@@ -98,7 +98,7 @@ val longValue: Long by longTweak(
     releaseValue = 300,
     minValue = 0,
     maxValue = 1000,
-    tweakValue = 50,
+    defaultTweakValue = 50,
     step = 50
 )
 ```
@@ -110,7 +110,7 @@ val stringValue: String? by stringTweak(
     group = "Group Name",
     tweakDescription = "A description...",
     releaseValue = null,
-    tweakValue = "Tweaked"
+    defaultTweakValue = "Tweaked"
 )
 
 val stringResOptionValue: Int by stringResOptionsTweak(

@@ -35,7 +35,7 @@ class TweakManager {
         group = "Feature Flags",
         tweakDescription = "Login Enabled",
         releaseValue = true,
-        tweakValue = false
+        defaultTweakValue = false
     )
 
     val intTweak: Int by intTweak(
@@ -45,7 +45,7 @@ class TweakManager {
         releaseValue = 300,
         minValue = 0,
         maxValue = 1000,
-        tweakValue = 50,
+        defaultTweakValue = 50,
         step = 50
     )
 
@@ -56,7 +56,7 @@ class TweakManager {
         releaseValue = 300f,
         minValue = 0f,
         maxValue = 1000f,
-        tweakValue = 50f,
+        defaultTweakValue = 50f,
         step = 50f
     )
 
@@ -67,7 +67,7 @@ class TweakManager {
         releaseValue = 300.0,
         minValue = 0.0,
         maxValue = 1000.0,
-        tweakValue = 50.0,
+        defaultTweakValue = 50.0,
         step = 50.0
     )
 
@@ -78,7 +78,7 @@ class TweakManager {
         releaseValue = 300,
         minValue = 0,
         maxValue = 1000,
-        tweakValue = 50,
+        defaultTweakValue = 50,
         step = 50
     )
 
@@ -87,7 +87,7 @@ class TweakManager {
         group = "Strings",
         tweakDescription = "Title of main screen",
         releaseValue = null,
-        tweakValue = "Tweaked"
+        defaultTweakValue = "Tweaked"
     )
 
     val server: Int by stringResOptionsTweak(
