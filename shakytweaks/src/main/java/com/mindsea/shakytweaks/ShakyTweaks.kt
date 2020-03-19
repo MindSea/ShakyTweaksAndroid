@@ -27,8 +27,10 @@ package com.mindsea.shakytweaks
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import android.view.KeyEvent
 import com.mindsea.shakytweaks.ui.createTweaksActivityIntent
 import com.mindsea.shakytweaks.util.ShakeDetector
+import java.util.*
 
 private const val SHARED_PREFERENCES_NAME = "shaky_tweaks"
 
@@ -36,6 +38,11 @@ object ShakyTweaks {
 
     private var isInitialized: Boolean = false
     private val moduleImpl = LibraryModuleImpl()
+
+    private var sKeyPressMS = 0L
+    private var tKeyPressMS = 0L
+
+    private const val KEY_PRESS_THRESHOLD = 50L
 
     fun init(context: Context) {
         if (isInitialized) {
@@ -78,5 +85,44 @@ object ShakyTweaks {
 
         override fun tweakValueResolver(): TweakValueResolver = tweakValueResolver
     }
+
+    /**
+     * A helper function for showing the Shaky Tweaks menu when simultaneously pressing the "S" + "T" keys.
+     *
+     * To be able to show the Shaky Tweaks menu using the designated input shortcut you must forward `onKeyDown` events
+     * from your activities into this method. Ideally to enable global access, this listener should be hooked up in a
+     * base activity used throughout your app.
+     *
+     * **Example usage:**
+     * ```
+     * class BaseActivity : AppCompatActivity() {
+     *     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+     *         ShakyTweaks.onKeyDown(this, keyCode)
+     *         return super.onKeyDown(keyCode, event)
+     *     }
+     * }
+     * ```
+     */
+    fun onKeyDown(context: Context, keyCode: Int) {
+        if (keyCode == KeyEvent.KEYCODE_S) {
+            if (isKeyPressTimeInThreshold(tKeyPressMS)) {
+                context.startActivity(createTweaksActivityIntent(context))
+            }
+            sKeyPressMS = Date().time
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_T) {
+            if (isKeyPressTimeInThreshold(sKeyPressMS)) {
+                context.startActivity(createTweaksActivityIntent(context))
+            }
+            tKeyPressMS = Date().time
+        }
+
+    }
+
+    private fun isKeyPressTimeInThreshold(pastKeyPressMS: Long): Boolean {
+        return (Date().time - pastKeyPressMS) <= KEY_PRESS_THRESHOLD
+    }
+
 }
 
