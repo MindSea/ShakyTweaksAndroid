@@ -87,11 +87,11 @@ object ShakyTweaks {
     }
 
     /**
-     * A helper function to start ShakyTweaks screen pressing "S" + "T".
+     * A helper function for showing the Shaky Tweaks menu when simultaneously pressing the "S" + "T" keys.
      *
-     * Forward `onKeyDown` events from your activities into this method, to be able to open
-     * ShakyTweaks screen with the Menu keycode. Ideally, this listener would be hooked in an Activity
-     * which is used throughout the app, so that ShakyTweaks is accessible from all screens of your app
+     * To be able to show the Shaky Tweaks menu using the designated input shortcut you must forward `onKeyDown` events
+     * from your activities into this method. Ideally to enable global access, this listener should be hooked up in a
+     * base activity used throughout your app.
      *
      * **Example usage:**
      * ```

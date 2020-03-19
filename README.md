@@ -15,9 +15,9 @@ Just two steps:
 
 Check out the sample app in `demo/` to see it in action.
 
-###  Simulator Usage
+###  Emulator Usage
 
-To enable easy access from Android Simulator, forward `onKeyDown` from your activities into `ShakyTweaks.onKeyDown`
+To enable easy access to the Shaky Tweaks menu from an Android Emulator, you should forward `onKeyDown` from your activities to `ShakyTweaks.onKeyDown`
 ```kotlin
 class BaseActivity : AppCompatActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -27,9 +27,8 @@ class BaseActivity : AppCompatActivity() {
 }
 ```
 
-You will have access to Shaky Tweaks with `S` + `T` from the activities `onKeyDown` is forwarded. The keys must be
-pressed simultaneously. The shortcut doesn't work if there is an active input field.
-
+You can then access the Shaky Tweaks menu by pressing `S` + `T` simultaneously from the activities that forward `onKeyDown`.
+The shortcut doesn't work if an input field is active.
 
 Samples
 ----
