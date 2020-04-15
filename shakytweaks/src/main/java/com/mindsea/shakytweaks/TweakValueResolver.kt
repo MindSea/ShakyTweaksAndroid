@@ -63,7 +63,7 @@ internal class TweakValueResolver(
             is Double -> editor.putDouble(key, value)
             is Float -> editor.putFloat(key, value)
             is Long -> editor.putLong(key, value)
-            is String -> editor.putString(key, value)
+            is String? -> editor.putString(key, value)
             else -> throw IllegalStateException("update value of type not implemented")
         }
         editor.apply()

@@ -146,6 +146,10 @@ releaseImplementation "com.mindsea.shakytweaks:shakytweaks-noop:0.10-alpha"
 debugImplementation "com.mindsea.shakytweaks:shakytweaks:0.10-alpha"
 ```
 
+Next proposed features
+----------------------
+* Implement `stringTweak` and `stringOptionalTweak` to better discriminate where the tweak is is optional or not.
+  * experiment generic tweak definition: `tweak<String>` and `tweak<String?>`
 
 License
 -------

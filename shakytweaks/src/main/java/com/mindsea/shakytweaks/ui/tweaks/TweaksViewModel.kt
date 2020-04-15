@@ -126,11 +126,11 @@ internal sealed class TweakItemViewModel {
         val description: String,
         private val tweakValueResolver: TweakValueResolver
     ) : TweakItemViewModel() {
-        val value: String
-            get() = tweakValueResolver.getTypedValue(tweakId)
+        val value: String?
+            get() = tweakValueResolver.getTypedValueOptional(tweakId)
 
         fun setValue(value: String) {
-            tweakValueResolver.updateValue(tweakId, value)
+            tweakValueResolver.updateValue(tweakId, if (value.isBlank()) null else value)
         }
     }
 
