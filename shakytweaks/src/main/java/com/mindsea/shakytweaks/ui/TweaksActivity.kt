@@ -94,11 +94,10 @@ internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGr
             is Groups -> {
                 if (state.previousSection is None) {
                     supportFragmentManager.beginTransaction()
-                        .add(R.id.container, TweakGroupsFragment())
+                        .replace(R.id.container, TweakGroupsFragment())
                         .commit()
                 } else {
                     supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(0, R.anim.slide_in_right)
                         .replace(R.id.container, TweakGroupsFragment())
                         .commit()
                 }
@@ -106,7 +105,6 @@ internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGr
             }
             is Tweaks -> {
                 supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.slide_in_left, 0)
                     .replace(R.id.container, createTweaksFragment(currentSection.groupId))
                     .commit()
             }
