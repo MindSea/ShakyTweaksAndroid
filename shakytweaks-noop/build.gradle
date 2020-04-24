@@ -26,9 +26,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: "com.jfrog.artifactory"
-apply plugin: 'maven-publish'
-
 android {
     compileSdkVersion libraryCompileSdkVersion
 
@@ -65,61 +62,3 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
-
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId rootProject.ext.libraryPackageName
-            version = rootProject.ext.libraryVersionName
-            artifactId project.getName()
-
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-
-                //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
-                configurations.compile.allDependencies.each {
-                    if (it.group && it.name && it.version) {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
-                    }
-                }
-
-                configurations.implementation.allDependencies.each {
-                    if (it.group && it.name && it.version) {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
-                    }
-                }
-
-            }
-        }
-
-    }
-}
-
-artifactory {
-    contextUrl = "https://maven.mindsea.com/"
-    publish {
-        repository {
-            repoKey = rootProject.ext.libraryVersionName.endsWith('SNAPSHOT') ? 'libs-snapshot-local' : 'libs-release-local'
-            username = "${msdMavenUser}"
-            password = "${msdMavenPassword}"
-            maven = true
-        }
-
-        defaults {
-            publications('aar')
-            publishArtifacts = true
-            publishBuildInfo = true
-            publishPom = true
-        }
-
-    }
-}
-
