@@ -1,6 +1,6 @@
 # Shaky Tweaks Android
 
-A small Kotlin library to provide dynamic configurations on test builds. The App configuration can be
+A small Kotlin library to provide dynamic configurations on test builds. The App's configuration can be
 updated on the fly with Shaky Tweaks.
 
 Usage
@@ -51,7 +51,7 @@ Read the current assigned tweak value
 Toast.makeText(context, "Shaky Tweaks boolean is: ${TweakManager.tweakedBoolean}", Toast.LENGTH_LONG).show()
 ```
 
-To change the Tweak values on fly, simply shake your device to access the Shaky Tweaks screen
+To change the Tweak values on fly, simply shake your device to access the Shaky Tweaks screen.
 
 
 
