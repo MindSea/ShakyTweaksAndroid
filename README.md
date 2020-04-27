@@ -1,4 +1,5 @@
 # Shaky Tweaks Android
+[![](https://jitpack.io/v/MindSea/ShakyTweaksAndroid.svg)](https://jitpack.io/#MindSea/ShakyTweaksAndroid)
 
 A small Kotlin library to provide dynamic configurations on test builds. The App's configuration can be
 updated on the fly with Shaky Tweaks.
@@ -19,8 +20,9 @@ Add the dependencies on your app module. Use the `no-op` variant on your release
 ```
 repositories {
     ...
-    releaseImplementation 'com.github.mindsea:shakytweaks-noop:X'
-    debugImplementation 'com.github.mindsea:shakytweaks:X'
+    def shaky_tweaks_version = 'x.x.x'
+    releaseImplementation 'com.github.mindsea.shakytweaksandroid:shakytweaks-noop:$shaky_tweaks_version'
+    debugImplementation 'com.github.mindsea.shakytweaksandroid:shakytweaks:$shaky_tweaks_version'
 }
 ```
 
@@ -179,6 +181,26 @@ registerActionTweak("action", "Actions", "Show a toast") {
         Toast.makeText(context, "Shaky Tweaks rocks!", Toast.LENGTH_LONG).show()
     }
 ```
+
+SNAPSHOT builds:
+----------------
+This repo support snapshot builds. Snapshots are built over specific branches.
+Simply change the version you are importing to `{branch}-SNAPSHOT`.
+
+*Note:*
+
+It might be necessary to update your Gradle settings to disable cache so that you always get the latest SNAPSHOT.
+* Update your project configuration:
+    ```
+    configurations.all {
+        ...
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+    ```
+* Update how you import the lib:
+    ```
+    debugImplementation group: "com.github.mindsea.shakytweaksandroid", name: "shakytweaks-noop", version: "mybranch-SNAPSHOT", changing: true  
+    ```
 
 Next proposed features
 ----------------------
