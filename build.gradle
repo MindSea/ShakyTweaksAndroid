@@ -31,8 +31,8 @@ buildscript {
         libraryMinSdkVersion = 17
         libraryTargetSdkVersion = 28
         libraryPackageName = 'com.mindsea.shakytweaks'
-        libraryVersionCode = 15
-        libraryVersionName = '0.15-alpha'
+        libraryVersionCode = 16
+        libraryVersionName = '0.20.0'
     }
 
     repositories {
@@ -45,8 +45,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.9.9"
     }
 
 }
@@ -55,16 +53,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-
-        maven {
-            credentials {
-                username "${msdMavenUser}"
-                password "${msdMavenPassword}"
-            }
-            url 'https://maven.mindsea.com/libs-release-local'
-        }
     }
-
 }
 
 task clean(type: Delete) {

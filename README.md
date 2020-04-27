@@ -1,19 +1,59 @@
-## Shaky Tweaks
+# Shaky Tweaks Android
 
-This is a small Kotlin library to provide dynamic configurations on `debug` builds. App configuration can be
-updated by shaking the device and changing the desired properties. 
-
-Use `shakytweaks-noop` on `release` builds to disable dynamic configurations in production.
+A small Kotlin library to provide dynamic configurations on test builds. The App's configuration can be
+updated on the fly with Shaky Tweaks.
 
 Usage
 -----
+Add the JitPack repository to your root build.gradle:
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
 
-Just two steps:
+Add the dependencies on your app module. Use the `no-op` variant on your release builds, so that Tweaks are disabled on production builds
+```
+repositories {
+    ...
+    releaseImplementation 'com.github.mindsea:shakytweaks-noop:X'
+    debugImplementation 'com.github.mindsea:shakytweaks:X'
+}
+```
 
- 1. Create any property or action by using one of `tweak` delegated properties
- 2. Launch the App and shake the device to manage tweaks
+Create a `TweakManager` class, and describe your tweakable variables
+```kotlin
+object TweakManager {
+    val tweakedBoolean: Boolean by booleanTweak(
+        tweakId = "unique_identifier",
+        group = "Group Name",
+        tweakDescription = "A description...",
+        releaseValue = true, // value for release builds
+        defaultTweakValue = false // value for debug builds
+    )
+}
+```
 
-Check out the sample app in `demo/` to see it in action.
+On your `Application` class, initialize Shaky Tweaks
+```kotlin
+override fun onCreate() {
+    super.onCreate()
+    ...    
+    ShakyTweaks.init(applicationContext)
+}
+```
+
+Read the current assigned tweak value
+```kotlin
+Toast.makeText(context, "Shaky Tweaks boolean is: ${TweakManager.tweakedBoolean}", Toast.LENGTH_LONG).show()
+```
+
+To change the Tweak values on fly, simply shake your device to access the Shaky Tweaks screen.
+
+
 
 ###  Emulator Usage
 
@@ -31,7 +71,9 @@ You can then access the Shaky Tweaks menu by pressing `S` + `T` simultaneously f
 The shortcut doesn't work if an input field is active.
 
 Samples
-----
+-------
+
+Check out the sample app in `demo/` to see it in action.
 
 Shaky Tweaks has support for the following types
 
@@ -138,40 +180,7 @@ registerActionTweak("action", "Actions", "Show a toast") {
     }
 ```
 
-Download
---------
-
-```groovy
-releaseImplementation "com.mindsea.shakytweaks:shakytweaks-noop:0.10-alpha"
-debugImplementation "com.mindsea.shakytweaks:shakytweaks:0.10-alpha"
-```
-
 Next proposed features
 ----------------------
 * Implement `stringTweak` and `stringOptionalTweak` to better discriminate where the tweak is is optional or not.
   * experiment generic tweak definition: `tweak<String>` and `tweak<String?>`
-
-License
--------
-
-    MIT License
-    
-    Copyright (c) 2019 MindSea
-    
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-    
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
