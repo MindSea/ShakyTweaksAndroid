@@ -24,12 +24,10 @@
 
 <resources>
 
-    <!-- Base application theme. -->
     <style name="ShakyTweaksTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">#626262</item>
+        <item name="colorPrimaryDark">#313131</item>
+        <item name="colorAccent">#000000</item>
     </style>
 
 </resources>
