@@ -21,8 +21,8 @@ Add the dependencies on your app module. Use the `no-op` variant on your release
 repositories {
     ...
     def shaky_tweaks_version = 'x.x.x'
-    releaseImplementation 'com.github.mindsea.shakytweaksandroid:shakytweaks-noop:$shaky_tweaks_version'
-    debugImplementation 'com.github.mindsea.shakytweaksandroid:shakytweaks:$shaky_tweaks_version'
+    releaseImplementation "com.github.mindsea.shakytweaksandroid:shakytweaks-noop:$shaky_tweaks_version"
+    debugImplementation "com.github.mindsea.shakytweaksandroid:shakytweaks:$shaky_tweaks_version"
 }
 ```
 

@@ -32,7 +32,7 @@ buildscript {
         libraryTargetSdkVersion = 28
         libraryPackageName = 'com.mindsea.shakytweaks'
         libraryVersionCode = 16
-        libraryVersionName = '0.20.0'
+        libraryVersionName = '0.20.1'
     }
 
     repositories {
