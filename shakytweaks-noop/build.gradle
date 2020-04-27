@@ -25,15 +25,19 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.mindsea'
+version = libraryVersionName
 
 android {
     compileSdkVersion libraryCompileSdkVersion
 
     defaultConfig {
-        minSdkVersion libraryMinSdkVersion
-        targetSdkVersion libraryTargetSdkVersion
-        versionCode libraryVersionCode
-        versionName libraryVersionName
+        minSdkVersion rootProject.libraryMinSdkVersion
+        targetSdkVersion rootProject.libraryTargetSdkVersion
+        versionCode rootProject.libraryVersionCode
+        versionName rootProject.libraryVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -51,6 +55,8 @@ android {
         }
 
     }
+
+    defaultPublishConfig "release"
 
 }
 
