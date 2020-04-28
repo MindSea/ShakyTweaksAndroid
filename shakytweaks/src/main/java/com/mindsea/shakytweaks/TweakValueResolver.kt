@@ -86,25 +86,25 @@ internal class TweakValueResolver(
         when (val tweak = tweakProvider.findTweak(key)) {
             is Tweak.IntTweak -> {
                 val updatedValue = getTypedValue<Int>(key) + (tweak.step * stepMultiplier)
-                if (updatedValue > tweak.minValue && updatedValue < tweak.maxValue) {
+                if (updatedValue >= tweak.minValue && updatedValue <= tweak.maxValue) {
                     updateValue(key, updatedValue)
                 }
             }
             is Tweak.LongTweak -> {
                 val updatedValue = getTypedValue<Long>(key) + (tweak.step * stepMultiplier)
-                if (updatedValue > tweak.minValue && updatedValue < tweak.maxValue) {
+                if (updatedValue >= tweak.minValue && updatedValue <= tweak.maxValue) {
                     updateValue(key, updatedValue)
                 }
             }
             is Tweak.DoubleTweak -> {
                 val updatedValue = getTypedValue<Double>(key) + (tweak.step * stepMultiplier)
-                if (updatedValue > tweak.minValue && updatedValue < tweak.maxValue) {
+                if (updatedValue >= tweak.minValue && updatedValue <= tweak.maxValue) {
                     updateValue(key, updatedValue)
                 }
             }
             is Tweak.FloatTweak -> {
                 val updatedValue = getTypedValue<Float>(key) + (tweak.step * stepMultiplier)
-                if (updatedValue > tweak.minValue && updatedValue < tweak.maxValue) {
+                if (updatedValue >= tweak.minValue && updatedValue <= tweak.maxValue) {
                     updateValue(key, updatedValue)
                 }
             }
