@@ -27,11 +27,11 @@ package com.mindsea.shakytweaks.extensions
 import android.content.SharedPreferences
 
 fun SharedPreferences.Editor.putDouble(key: String, value: Double): SharedPreferences.Editor {
-    return this.putLong(key, java.lang.Double.doubleToRawLongBits(value))
+    return this.putLong(key, value.toRawBits())
 }
 
 fun SharedPreferences.getDouble(key: String, defaultValue: Double): Double {
-    val defaultValueAsLong = java.lang.Double.doubleToRawLongBits(defaultValue)
-    val newValue = java.lang.Double.longBitsToDouble(this.getLong(key, defaultValueAsLong))
+    val defaultValueAsLong = defaultValue.toRawBits()
+    val newValue = Double.fromBits(this.getLong(key, defaultValueAsLong))
     return if (!newValue.isNaN()) newValue else defaultValue
 }
