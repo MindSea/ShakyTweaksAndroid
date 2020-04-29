@@ -26,26 +26,22 @@ package com.mindsea.shakytweaks.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.mindsea.shakytweaks.R
-import com.mindsea.shakytweaks.ShakyTweaks
 import com.mindsea.shakytweaks.ui.TweakActivitySection.*
 import com.mindsea.shakytweaks.ui.tweakgroups.TweakGroupsFragment
 import com.mindsea.shakytweaks.ui.tweaks.createTweaksFragment
 
-internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGroupsFragmentListener {
+internal class TweaksActivity : AppCompatActivity(),
+    TweakGroupsFragment.TweakGroupsFragmentListener {
 
     private lateinit var viewModel: TweaksActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tweaks)
-        val libraryModule = ShakyTweaks.module()
-        viewModel = TweaksActivityViewModel(libraryModule.tweakValueResolver())
+        viewModel = TweaksActivityViewModel()
         supportActionBar?.let {
             it.title = resources.getString(R.string.tweaks_title)
             it.setDisplayHomeAsUpEnabled(true)
@@ -65,20 +61,6 @@ internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGr
         return true
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.tweaks_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_reset_tweaks -> {
-                displayResetTweaksConfirmationDialog()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun onBackPressed() {
         viewModel.backPressed()
@@ -92,6 +74,9 @@ internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGr
         when (val currentSection = state.currentSection) {
             is None -> finish()
             is Groups -> {
+                supportActionBar?.let {
+                    it.title = resources.getString(R.string.tweaks_title)
+                }
                 if (state.previousSection is None) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, TweakGroupsFragment())
@@ -104,6 +89,7 @@ internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGr
                 }
             }
             is Tweaks -> {
+                supportActionBar?.title = currentSection.groupId
                 supportFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left)
                     .replace(R.id.container, createTweaksFragment(currentSection.groupId))
@@ -111,19 +97,9 @@ internal class TweaksActivity : AppCompatActivity(), TweakGroupsFragment.TweakGr
             }
         }
     }
-
-    private fun displayResetTweaksConfirmationDialog() = AlertDialog.Builder(this)
-        .setTitle(R.string.dialog_title)
-        .setPositiveButton(R.string.dialog_confirm_action) { _, _ ->
-            viewModel.resetTweaks()
-        }
-        .setNegativeButton(R.string.dialog_cancel_action ) { _, _ ->
-            // Do nothing
-        }
-        .create()
-        .show()
 }
 
-internal fun createTweaksActivityIntent(context: Context) = Intent(context, TweaksActivity::class.java).apply {
-    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-}
+internal fun createTweaksActivityIntent(context: Context) =
+    Intent(context, TweaksActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }

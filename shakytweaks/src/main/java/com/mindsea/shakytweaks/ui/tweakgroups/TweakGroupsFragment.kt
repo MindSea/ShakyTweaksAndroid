@@ -26,9 +26,8 @@ package com.mindsea.shakytweaks.ui.tweakgroups
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mindsea.shakytweaks.R
@@ -41,14 +40,21 @@ internal class TweakGroupsFragment : Fragment() {
     private lateinit var viewModel: TweakGroupsViewModel
     private lateinit var adapter: TweakGroupsAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_tweak_groups, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        viewModel = TweakGroupsViewModel(ShakyTweaks.module().tweakProvider())
+        val libraryModule = ShakyTweaks.module()
+        viewModel =
+            TweakGroupsViewModel(libraryModule.tweakProvider(), libraryModule.tweakValueResolver())
         viewModel.onUpdate = this::updateView
     }
 
@@ -71,17 +77,51 @@ internal class TweakGroupsFragment : Fragment() {
         super.onDetach()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.tweaks_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_reset_tweaks -> {
+                displayResetTweaksConfirmationDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun setupRecyclerView() {
         adapter = TweakGroupsAdapter()
         adapter.onTweakGroupSelected = { groupId ->
             listener?.onGroupSelected(groupId)
         }
         tweakGroupsRecyclerView.adapter = adapter
-        tweakGroupsRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        tweakGroupsRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     private fun updateView(state: TweakGroupsState) {
         adapter.setTweakGroups(state.groups)
+    }
+
+
+    private fun displayResetTweaksConfirmationDialog() = context?.let {
+        AlertDialog.Builder(it)
+            .setTitle(R.string.dialog_title)
+            .setPositiveButton(R.string.dialog_confirm_action) { _, _ ->
+                viewModel.resetTweaks()
+            }
+            .setNegativeButton(R.string.dialog_cancel_action) { _, _ ->
+                // Do nothing
+            }
+            .create()
+            .show()
     }
 
     interface TweakGroupsFragmentListener {
