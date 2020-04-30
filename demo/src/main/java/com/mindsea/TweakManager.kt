@@ -64,11 +64,11 @@ class TweakManager {
         tweakId = "numbers_double",
         group = "Numbers",
         tweakDescription = "Double",
-        releaseValue = 300.0,
-        minValue = 0.0,
-        maxValue = 1000.0,
-        defaultTweakValue = 50.0,
-        step = 50.0
+        releaseValue = 5.0,
+        minValue = -10.0,
+        maxValue = 20.0,
+        defaultTweakValue = 2.5,
+        step = 1.0/4.0
     )
 
     val longTweak: Long by longTweak(
