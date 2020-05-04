@@ -25,27 +25,35 @@
 package com.mindsea.shakytweaks.ui.tweakgroups
 
 import com.mindsea.shakytweaks.TweakProvider
+import com.mindsea.shakytweaks.TweakValueResolver
 
-internal class TweakGroupsViewModel(tweakProvider: TweakProvider) {
+internal class TweakGroupsViewModel(
+    tweakProvider: TweakProvider,
+    private val tweakValueResolver: TweakValueResolver
+) {
 
     private var state: TweakGroupsState =
         TweakGroupsState(emptyList())
-    set(value) {
-        field = value
-        onUpdate?.invoke(value)
-    }
+        set(value) {
+            field = value
+            onUpdate?.invoke(value)
+        }
 
     var onUpdate: ((TweakGroupsState) -> Unit)? = null
-    set(value) {
-        field = value
-        value?.invoke(state)
-    }
+        set(value) {
+            field = value
+            value?.invoke(state)
+        }
 
     init {
         val groups = tweakProvider.tweaks
             .distinctBy { it.group }
             .map { TweakGroup(it.group) }
         state = TweakGroupsState(groups)
+    }
+
+    fun resetTweaks() {
+        tweakValueResolver.resetAllTweaks()
     }
 }
 
