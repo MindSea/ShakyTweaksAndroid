@@ -32,9 +32,20 @@ internal class TweakValueResolver(
     private val tweakProvider: TweakProvider,
     private val sharedPreferences: SharedPreferences
 ) {
+    class TweakValueOutOfRangeException(
+        message: String,
+        val thresholdType: ThresholdType,
+        val attemptedValue: String,
+        val thresholdValue: String
+    ) : Exception(message) {
+        enum class ThresholdType {
+            MIN, MAX
+        }
+    }
 
     inline fun <reified T> getTypedValue(key: String): T {
-        return getValue(key) as T? ?: throw IllegalArgumentException("Tweak with id $key registered with wrong type")
+        return getValue(key) as T?
+            ?: throw IllegalArgumentException("Tweak with id $key registered with wrong type")
     }
 
     inline fun <reified T> getTypedValueOptional(key: String): T? {
@@ -109,6 +120,128 @@ internal class TweakValueResolver(
                 }
             }
             else -> throw UnsupportedOperationException("Tweak $tweak doesn't support increment")
+        }
+    }
+
+    fun allowsDecimals(key: String): Boolean {
+        return when (val tweak = tweakProvider.findTweak(key)) {
+            is Tweak.IntTweak -> false
+            is Tweak.LongTweak -> false
+            is Tweak.FloatTweak -> true
+            is Tweak.DoubleTweak -> true
+            else -> throw UnsupportedOperationException("Tweak $tweak isn't a number")
+        }
+    }
+
+    fun allowsNegativeNumbers(key: String): Boolean {
+        return when (val tweak = tweakProvider.findTweak(key)) {
+            is Tweak.IntTweak -> tweak.minValue < 0
+            is Tweak.LongTweak -> tweak.minValue < 0
+            is Tweak.FloatTweak -> tweak.minValue < 0
+            is Tweak.DoubleTweak -> tweak.minValue < 0
+            else -> throw UnsupportedOperationException("Tweak $tweak isn't a number")
+        }
+    }
+
+    fun updateValueFromString(key: String, string: String) {
+        when (val tweak = tweakProvider.findTweak(key)) {
+            is Tweak.IntTweak -> {
+                val updatedValue = string.toInt()
+                when {
+                    updatedValue < tweak.minValue -> {
+                        throw TweakValueOutOfRangeException(
+                            "The value $updatedValue is smaller than the minimum value (${tweak.minValue})",
+                            TweakValueOutOfRangeException.ThresholdType.MIN,
+                            string,
+                            tweak.minValue.toString()
+                        )
+                    }
+                    updatedValue > tweak.maxValue -> {
+                        throw TweakValueOutOfRangeException(
+                            "The value $updatedValue is larger than the maximum value (${tweak.maxValue})",
+                            TweakValueOutOfRangeException.ThresholdType.MAX,
+                            string,
+                            tweak.maxValue.toString()
+                        )
+                    }
+                    else -> {
+                        updateValue(key, updatedValue)
+                    }
+                }
+            }
+            is Tweak.LongTweak -> {
+                val updatedValue = string.toLong()
+                when {
+                    updatedValue < tweak.minValue -> {
+                        throw TweakValueOutOfRangeException(
+                            "The value $updatedValue is smaller than the minimum value (${tweak.minValue})",
+                            TweakValueOutOfRangeException.ThresholdType.MIN,
+                            string,
+                            tweak.minValue.toString()
+                        )
+                    }
+                    updatedValue > tweak.maxValue -> {
+                        throw TweakValueOutOfRangeException(
+                            "The value $updatedValue is larger than the maximum value (${tweak.maxValue})",
+                            TweakValueOutOfRangeException.ThresholdType.MAX,
+                            string,
+                            tweak.maxValue.toString()
+                        )
+                    }
+                    else -> {
+                        updateValue(key, updatedValue)
+                    }
+                }
+            }
+            is Tweak.DoubleTweak -> {
+                val updatedValue = string.toDouble()
+                when {
+                    updatedValue < tweak.minValue -> {
+                        throw TweakValueOutOfRangeException(
+                            "The value $updatedValue is smaller than the minimum value (${tweak.minValue})",
+                            TweakValueOutOfRangeException.ThresholdType.MIN,
+                            string,
+                            tweak.minValue.toString()
+                        )
+                    }
+                    updatedValue > tweak.maxValue -> {
+                        throw TweakValueOutOfRangeException(
+                            "The value $updatedValue is larger than the maximum value (${tweak.maxValue})",
+                            TweakValueOutOfRangeException.ThresholdType.MAX,
+                            string,
+                            tweak.maxValue.toString()
+                        )
+                    }
+                    else -> {
+                        updateValue(key, updatedValue)
+                    }
+                }
+            }
+            is Tweak.FloatTweak -> {
+                val updatedValue = string.toFloat()
+                when {
+                    updatedValue < tweak.minValue -> {
+                        throw TweakValueOutOfRangeException(
+                            "The value $updatedValue is smaller than the minimum value (${tweak.minValue})",
+                            TweakValueOutOfRangeException.ThresholdType.MIN,
+                            string,
+                            tweak.minValue.toString()
+                        )
+                    }
+                    updatedValue > tweak.maxValue -> {
+                        throw TweakValueOutOfRangeException(
+                            "The value $updatedValue is larger than the maximum value (${tweak.maxValue})",
+                            TweakValueOutOfRangeException.ThresholdType.MAX,
+                            string,
+                            tweak.maxValue.toString()
+                        )
+                    }
+                    else -> {
+                        updateValue(key, updatedValue)
+                    }
+                }
+            }
+            else -> throw UnsupportedOperationException("Tweak $tweak doesn't support updateValueFromString")
         }
     }
 }

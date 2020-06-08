@@ -24,7 +24,6 @@
 
 package com.mindsea.shakytweaks.ui.tweaks
 
-import android.content.Context
 import com.mindsea.shakytweaks.Tweak.*
 import com.mindsea.shakytweaks.TweakProvider
 import com.mindsea.shakytweaks.TweakValueResolver
@@ -106,6 +105,20 @@ internal sealed class TweakItemViewModel {
         fun incrementValue() = tweakValueResolver.incrementValue(tweakId)
 
         fun decrementValue() = tweakValueResolver.decrementValue(tweakId)
+
+        val allowsDecimals: Boolean
+            get() = tweakValueResolver.allowsDecimals(tweakId)
+
+        val allowsNegativeNumbers: Boolean
+            get() = tweakValueResolver.allowsNegativeNumbers(tweakId)
+
+        @Throws(
+            TweakValueResolver.TweakValueOutOfRangeException::class,
+            NumberFormatException::class
+        )
+        fun setValueFromString(string: String) {
+            tweakValueResolver.updateValueFromString(tweakId, string)
+        }
     }
 
     data class BooleanTweakViewModel(

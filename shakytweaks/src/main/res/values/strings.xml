@@ -32,4 +32,8 @@
     <string name="dialog_confirm_action">Confirm</string>
 
     <string name="dialog_cancel_action">Cancel</string>
+
+    <string name="tweak_value_too_large_alert">The value %1$s is larger than the maximum value (%2$s)</string>
+
+    <string name="tweak_value_too_small_alert">The value %1$s is smaller than the minimum value (%2$s)</string>
 </resources>
