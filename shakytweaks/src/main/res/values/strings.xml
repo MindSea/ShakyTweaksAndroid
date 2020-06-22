@@ -25,7 +25,7 @@
 <resources>
     <string name="tweaks_title">Tweaks</string>
 
-    <string name="reset_tweaks_option">Reset</string>
+    <string name="reset_tweaks_option">Restore Defaults</string>
 
     <string name="dialog_title">Reset all tweaks to their default values?</string>
 
