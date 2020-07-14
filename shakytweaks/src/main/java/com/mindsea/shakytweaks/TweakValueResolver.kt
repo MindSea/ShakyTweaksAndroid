@@ -32,9 +32,19 @@ internal class TweakValueResolver(
     private val tweakProvider: TweakProvider,
     private val sharedPreferences: SharedPreferences
 ) {
+    class TweakValueOutOfRangeException(
+        val thresholdType: ThresholdType,
+        val attemptedValue: String,
+        val thresholdValue: String
+    ) : Exception("The value $attemptedValue is ${if (thresholdType == ThresholdType.MIN) "smaller" else "larger" } than the maximum value (${thresholdValue})") {
+        enum class ThresholdType {
+            MIN, MAX
+        }
+    }
 
     inline fun <reified T> getTypedValue(key: String): T {
-        return getValue(key) as T? ?: throw IllegalArgumentException("Tweak with id $key registered with wrong type")
+        return getValue(key) as T?
+            ?: throw IllegalArgumentException("Tweak with id $key registered with wrong type")
     }
 
     inline fun <reified T> getTypedValueOptional(key: String): T? {
@@ -109,6 +119,65 @@ internal class TweakValueResolver(
                 }
             }
             else -> throw UnsupportedOperationException("Tweak $tweak doesn't support increment")
+        }
+    }
+
+    fun allowsDecimals(key: String): Boolean {
+        return when (val tweak = tweakProvider.findTweak(key)) {
+            is Tweak.IntTweak -> false
+            is Tweak.LongTweak -> false
+            is Tweak.FloatTweak -> true
+            is Tweak.DoubleTweak -> true
+            else -> throw UnsupportedOperationException("Tweak $tweak isn't a number")
+        }
+    }
+
+    fun allowsNegativeNumbers(key: String): Boolean {
+        return when (val tweak = tweakProvider.findTweak(key)) {
+            is Tweak.IntTweak -> tweak.minValue < 0
+            is Tweak.LongTweak -> tweak.minValue < 0
+            is Tweak.FloatTweak -> tweak.minValue < 0
+            is Tweak.DoubleTweak -> tweak.minValue < 0
+            else -> throw UnsupportedOperationException("Tweak $tweak isn't a number")
+        }
+    }
+
+    fun updateValueFromString(key: String, string: String) {
+        when (val tweak = tweakProvider.findTweak(key)) {
+            is Tweak.IntTweak -> setTweakValueFromString(key, string, {s -> s.toInt() }, tweak.minValue, tweak.maxValue)
+            is Tweak.FloatTweak -> setTweakValueFromString(key, string, {s -> s.toFloat() }, tweak.minValue, tweak.maxValue)
+            is Tweak.LongTweak -> setTweakValueFromString(key, string, {s -> s.toLong() }, tweak.minValue, tweak.maxValue)
+            is Tweak.DoubleTweak -> setTweakValueFromString(key, string, {s -> s.toDouble() }, tweak.minValue, tweak.maxValue)
+            else -> throw UnsupportedOperationException("Tweak $tweak doesn't support updateValueFromString")
+        }
+    }
+
+    private fun <T: Comparable<T>> setTweakValueFromString(
+        key: String,
+        string: String,
+        mapper: (String) -> T,
+        minValue: T,
+        maxValue: T
+    ) {
+        val updatedValue = mapper(string)
+        when {
+            updatedValue < minValue -> {
+                throw TweakValueOutOfRangeException(
+                    TweakValueOutOfRangeException.ThresholdType.MIN,
+                    updatedValue.toString(),
+                    minValue.toString()
+                )
+            }
+            updatedValue > maxValue -> {
+                throw TweakValueOutOfRangeException(
+                    TweakValueOutOfRangeException.ThresholdType.MAX,
+                    updatedValue.toString(),
+                    maxValue.toString()
+                )
+            }
+            else -> {
+                updateValue(key, updatedValue)
+            }
         }
     }
 }
