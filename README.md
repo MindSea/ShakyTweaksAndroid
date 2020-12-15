@@ -183,8 +183,7 @@ registerActionTweak("action", "Actions", "Show a toast") {
 ```
 
 * Screenshots
-
-[Sample](https://github.com/MindSea/ShakyTweaksAndroid/blob/feature/add-screenshots-in-readme/img/sample.gif)
+![plot](img/sample.gif)
 
 SNAPSHOT builds:
 ----------------
