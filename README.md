@@ -39,12 +39,14 @@ object TweakManager {
 }
 ```
 
-On your `Application` class, initialize Shaky Tweaks
+On your `BaseActivity` class, initialize Shaky Tweaks.
 ```kotlin
-override fun onCreate() {
-    super.onCreate()
-    ...    
-    ShakyTweaks.init(applicationContext)
+class BaseActivity : AppCompatActivity(), LifecycleOwner {
+    override fun onCreate() {
+        super.onCreate()
+        ...    
+        ShakyTweaks.init(this, lifecycle)
+    }
 }
 ```
 

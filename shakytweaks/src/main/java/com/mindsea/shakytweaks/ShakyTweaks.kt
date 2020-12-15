@@ -24,10 +24,12 @@
 
 package com.mindsea.shakytweaks
 
+import android.app.Activity
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.view.KeyEvent
+import androidx.lifecycle.Lifecycle
 import com.mindsea.shakytweaks.ui.createTweaksActivityIntent
 import com.mindsea.shakytweaks.util.ShakeDetector
 import java.util.*
@@ -44,18 +46,21 @@ object ShakyTweaks {
 
     private const val KEY_PRESS_THRESHOLD = 50L
 
-    fun init(context: Context) {
+    fun init(activity: Activity, lifecycle: Lifecycle) {
         if (isInitialized) {
             throw IllegalStateException("Shaky Tweaks must be initialized only once")
         }
         isInitialized = true
-        moduleImpl.init(context)
-        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        moduleImpl.init(activity)
+
+        val sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
         val shakeDetector = ShakeDetector()
         shakeDetector.setListener {
-            context.startActivity(createTweaksActivityIntent(context))
+            if(lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                activity.startActivity(createTweaksActivityIntent(activity))
+            }
         }
 
         sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)

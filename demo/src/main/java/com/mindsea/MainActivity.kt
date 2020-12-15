@@ -30,6 +30,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import com.mindsea.shakytweaks.ShakyTweaks
 import com.mindsea.shakytweaks.registerActionTweak
 import com.mindsea.shakytweaks.unregisterActionTweak
@@ -37,11 +38,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 private const val localActionKey = "local_action_key"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        ShakyTweaks.init(this@MainActivity, lifecycle)
 
         button.setOnClickListener {
             val intent = Intent(this, SecondActivity::class.java)
