@@ -47,6 +47,12 @@ class BaseActivity : AppCompatActivity(), LifecycleOwner {
         ...    
         ShakyTweaks.init(this, lifecycle)
     }
+    
+    override fun onDestroy() {
+        ShakyTweaks.release(this@MainActivity)
+        ...
+        super.onDestroy()
+    }
 }
 ```
 

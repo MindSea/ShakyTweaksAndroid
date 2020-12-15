@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             Toast.makeText(this, "Second Activity button visible!", Toast.LENGTH_LONG).show()
             button.visibility = View.VISIBLE
         }
-
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -81,6 +80,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     override fun onDestroy() {
         unregisterActionTweak(localActionKey)
+
+        ShakyTweaks.release(this@MainActivity)
+
         super.onDestroy()
     }
 }

@@ -38,8 +38,9 @@ private const val SHARED_PREFERENCES_NAME = "shaky_tweaks"
 
 object ShakyTweaks {
 
-    private var isInitialized: Boolean = false
     private val moduleImpl = LibraryModuleImpl()
+
+    private val shakeDetector = ShakeDetector()
 
     private var sKeyPressMS = 0L
     private var tKeyPressMS = 0L
@@ -47,16 +48,11 @@ object ShakyTweaks {
     private const val KEY_PRESS_THRESHOLD = 50L
 
     fun init(activity: Activity, lifecycle: Lifecycle) {
-        if (isInitialized) {
-            throw IllegalStateException("Shaky Tweaks must be initialized only once")
-        }
-        isInitialized = true
         moduleImpl.init(activity)
 
         val sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        val shakeDetector = ShakeDetector()
         shakeDetector.setListener {
             if(lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
                 activity.startActivity(createTweaksActivityIntent(activity))
@@ -64,6 +60,11 @@ object ShakyTweaks {
         }
 
         sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
+    }
+
+    fun release(activity: Activity) {
+        val sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensorManager.unregisterListener(shakeDetector)
     }
 
     internal fun module(): LibraryModule = moduleImpl
