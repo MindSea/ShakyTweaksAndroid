@@ -182,6 +182,10 @@ registerActionTweak("action", "Actions", "Show a toast") {
     }
 ```
 
+## Screenshots
+
+![plot](img/sample.gif)
+
 SNAPSHOT builds:
 ----------------
 This repo support snapshot builds. Snapshots are built over specific branches.
