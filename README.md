@@ -182,7 +182,7 @@ registerActionTweak("action", "Actions", "Show a toast") {
     }
 ```
 
-* Screenshots
+## Screenshots
 
 ![plot](img/sample.gif)
 
