@@ -51,16 +51,35 @@ object ShakyTweaks: LifecycleEventObserver {
 
     private lateinit var sensorManager: SensorManager
     private lateinit var accelerometer: Sensor
+    private lateinit var lifecycle: Lifecycle
+
+    @Deprecated("Issues related to the lifecycle.\n", replaceWith = ReplaceWith("init(activity: Activity, lifecycle: Lifecycle)"))
+    fun init(context: Context) {
+        moduleImpl.init(context)
+        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+        val shakeDetector = ShakeDetector()
+        shakeDetector.setListener {
+            context.startActivity(createTweaksActivityIntent(context))
+        }
+
+        sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
+    }
 
     fun init(activity: Activity, lifecycle: Lifecycle) {
+        this.lifecycle = lifecycle
+
         sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
         moduleImpl.init(activity)
 
         shakeDetector.setListener {
             activity.startActivity(createTweaksActivityIntent(activity))
         }
-        lifecycle.addObserver(this)
+
+        this.lifecycle.addObserver(this)
     }
 
     internal fun module(): LibraryModule = moduleImpl
@@ -127,14 +146,28 @@ object ShakyTweaks: LifecycleEventObserver {
     }
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-        when(event){
+        when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
+                if (::sensorManager.isInitialized) {
+                    sensorManager.registerListener(
+                        shakeDetector,
+                        accelerometer,
+                        SensorManager.SENSOR_DELAY_UI
+                    )
+                }
             }
             Lifecycle.Event.ON_STOP -> {
-                sensorManager.unregisterListener(shakeDetector)
+                if (::sensorManager.isInitialized) {
+                    sensorManager.unregisterListener(shakeDetector)
+                }
             }
-            else -> { }
+            Lifecycle.Event.ON_DESTROY -> {
+                if (::lifecycle.isInitialized) {
+                    lifecycle.removeObserver(this)
+                }
+            }
+            else -> {
+            }
         }
     }
 }
