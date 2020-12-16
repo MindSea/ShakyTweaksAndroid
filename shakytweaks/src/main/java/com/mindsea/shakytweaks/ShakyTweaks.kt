@@ -30,13 +30,15 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.view.KeyEvent
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import com.mindsea.shakytweaks.ui.createTweaksActivityIntent
 import com.mindsea.shakytweaks.util.ShakeDetector
 import java.util.*
 
 private const val SHARED_PREFERENCES_NAME = "shaky_tweaks"
 
-object ShakyTweaks {
+object ShakyTweaks: LifecycleEventObserver {
 
     private val moduleImpl = LibraryModuleImpl()
 
@@ -47,24 +49,18 @@ object ShakyTweaks {
 
     private const val KEY_PRESS_THRESHOLD = 50L
 
+    private lateinit var sensorManager: SensorManager
+    private lateinit var accelerometer: Sensor
+
     fun init(activity: Activity, lifecycle: Lifecycle) {
+        sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         moduleImpl.init(activity)
 
-        val sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-
         shakeDetector.setListener {
-            if(lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                activity.startActivity(createTweaksActivityIntent(activity))
-            }
+            activity.startActivity(createTweaksActivityIntent(activity))
         }
-
-        sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
-    }
-
-    fun release(activity: Activity) {
-        val sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensorManager.unregisterListener(shakeDetector)
+        lifecycle.addObserver(this)
     }
 
     internal fun module(): LibraryModule = moduleImpl
@@ -130,5 +126,16 @@ object ShakyTweaks {
         return (Date().time - pastKeyPressMS) <= KEY_PRESS_THRESHOLD
     }
 
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        when(event){
+            Lifecycle.Event.ON_RESUME -> {
+                sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
+            }
+            Lifecycle.Event.ON_STOP -> {
+                sensorManager.unregisterListener(shakeDetector)
+            }
+            else -> { }
+        }
+    }
 }
 

@@ -81,8 +81,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     override fun onDestroy() {
         unregisterActionTweak(localActionKey)
 
-        ShakyTweaks.release(this@MainActivity)
-
         super.onDestroy()
     }
 }
