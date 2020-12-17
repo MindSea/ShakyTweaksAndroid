@@ -38,7 +38,7 @@ import java.util.*
 
 private const val SHARED_PREFERENCES_NAME = "shaky_tweaks"
 
-object ShakyTweaks: LifecycleEventObserver {
+object ShakyTweaks : LifecycleEventObserver {
 
     private val moduleImpl = LibraryModuleImpl()
 
@@ -49,11 +49,14 @@ object ShakyTweaks: LifecycleEventObserver {
 
     private const val KEY_PRESS_THRESHOLD = 50L
 
-    private lateinit var sensorManager: SensorManager
-    private lateinit var accelerometer: Sensor
-    private lateinit var lifecycle: Lifecycle
+    private var sensorManager: SensorManager? = null
+    private var accelerometer: Sensor? = null
+    private var lifecycle: Lifecycle? = null
 
-    @Deprecated("Issues related to the lifecycle.", replaceWith = ReplaceWith("init(activity: Activity, lifecycle: Lifecycle)"))
+    @Deprecated(
+        "Issues related to the lifecycle.",
+        replaceWith = ReplaceWith("init(activity: Activity, lifecycle: Lifecycle)")
+    )
     fun init(context: Context) {
         moduleImpl.init(context)
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -71,7 +74,7 @@ object ShakyTweaks: LifecycleEventObserver {
         this.lifecycle = lifecycle
 
         sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
         moduleImpl.init(activity)
 
@@ -79,7 +82,7 @@ object ShakyTweaks: LifecycleEventObserver {
             activity.startActivity(createTweaksActivityIntent(activity))
         }
 
-        this.lifecycle.addObserver(this)
+        this.lifecycle?.addObserver(this)
     }
 
     internal fun module(): LibraryModule = moduleImpl
@@ -98,7 +101,10 @@ object ShakyTweaks: LifecycleEventObserver {
         private lateinit var tweakValueResolver: TweakValueResolver
 
         fun init(context: Context) {
-            val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val sharedPreferences = context.getSharedPreferences(
+                SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE
+            )
             tweakValueResolver = TweakValueResolver(tweakProvider, sharedPreferences)
         }
 
@@ -148,23 +154,17 @@ object ShakyTweaks: LifecycleEventObserver {
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                if (::sensorManager.isInitialized) {
-                    sensorManager.registerListener(
-                        shakeDetector,
-                        accelerometer,
-                        SensorManager.SENSOR_DELAY_UI
-                    )
-                }
+                sensorManager?.registerListener(
+                    shakeDetector,
+                    accelerometer,
+                    SensorManager.SENSOR_DELAY_UI
+                )
             }
             Lifecycle.Event.ON_STOP -> {
-                if (::sensorManager.isInitialized) {
-                    sensorManager.unregisterListener(shakeDetector)
-                }
+                sensorManager?.unregisterListener(shakeDetector)
             }
             Lifecycle.Event.ON_DESTROY -> {
-                if (::lifecycle.isInitialized) {
-                    lifecycle.removeObserver(this)
-                }
+                lifecycle?.removeObserver(this)
             }
             else -> {
             }
