@@ -53,23 +53,6 @@ object ShakyTweaks : LifecycleEventObserver {
     private var accelerometer: Sensor? = null
     private var lifecycle: Lifecycle? = null
 
-    @Deprecated(
-        "Issues related to the lifecycle.",
-        replaceWith = ReplaceWith("init(activity: Activity, lifecycle: Lifecycle)")
-    )
-    fun init(context: Context) {
-        moduleImpl.init(context)
-        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-
-        val shakeDetector = ShakeDetector()
-        shakeDetector.setListener {
-            context.startActivity(createTweaksActivityIntent(context))
-        }
-
-        sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
-    }
-
     fun init(activity: Activity, lifecycle: Lifecycle) {
         this.lifecycle = lifecycle
 
