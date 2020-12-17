@@ -210,3 +210,26 @@ Next proposed features
 ----------------------
 * Implement `stringTweak` and `stringOptionalTweak` to better discriminate where the tweak is is optional or not.
   * experiment generic tweak definition: `tweak<String>` and `tweak<String?>`
+
+
+How to migrate from 0.20.4 to 0.21.0?
+-------------------------------------
+
+You need to remove the line bellow from your `Application` class:
+
+```kotlin    
+    ShakyTweaks.init(applicationContext)
+```
+
+After that on your `BaseActivity` class, initialize Shaky Tweaks.
+```kotlin
+class BaseActivity : AppCompatActivity() {
+    override fun onCreate() {
+        super.onCreate()
+        ...    
+        ShakyTweaks.init(this, lifecycle)
+    }
+}
+```
+
+It is important that your activity extends from `androidx.appcompat.app.AppCompatActivity`.
