@@ -53,7 +53,7 @@ object ShakyTweaks: LifecycleEventObserver {
     private lateinit var accelerometer: Sensor
     private lateinit var lifecycle: Lifecycle
 
-    @Deprecated("Issues related to the lifecycle.\n", replaceWith = ReplaceWith("init(activity: Activity, lifecycle: Lifecycle)"))
+    @Deprecated("Issues related to the lifecycle.", replaceWith = ReplaceWith("init(activity: Activity, lifecycle: Lifecycle)"))
     fun init(context: Context) {
         moduleImpl.init(context)
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
