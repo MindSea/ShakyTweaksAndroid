@@ -50,7 +50,7 @@ class BaseActivity : AppCompatActivity() {
 }
 ```
 
-It is important that you activity extends from `androidx.appcompat.app.AppCompatActivity`.
+It is important that your activity extends from `androidx.appcompat.app.AppCompatActivity`.
 
 Read the current assigned tweak value
 ```kotlin
