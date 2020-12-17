@@ -41,7 +41,7 @@ object TweakManager {
 
 On your `BaseActivity` class, initialize Shaky Tweaks.
 ```kotlin
-class BaseActivity : AppCompatActivity(), LifecycleOwner {
+class BaseActivity : AppCompatActivity() {
     override fun onCreate() {
         super.onCreate()
         ...    
@@ -49,6 +49,8 @@ class BaseActivity : AppCompatActivity(), LifecycleOwner {
     }
 }
 ```
+
+It is important that you activity extends from `androidx.appcompat.app.AppCompatActivity`.
 
 Read the current assigned tweak value
 ```kotlin
