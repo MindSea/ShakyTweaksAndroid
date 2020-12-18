@@ -38,7 +38,7 @@ import java.util.*
 
 private const val SHARED_PREFERENCES_NAME = "shaky_tweaks"
 
-object ShakyTweaks : LifecycleEventObserver {
+object ShakyTweaks {
 
     private val moduleImpl = LibraryModuleImpl()
 
@@ -49,15 +49,15 @@ object ShakyTweaks : LifecycleEventObserver {
 
     private const val KEY_PRESS_THRESHOLD = 50L
 
-    private var sensorManager: SensorManager? = null
-    private var accelerometer: Sensor? = null
-    private var lifecycle: Lifecycle? = null
+    private lateinit var sensorManager: SensorManager
+    private lateinit var accelerometer: Sensor
+    private lateinit var lifecycle: Lifecycle
+
+    private lateinit var lifeCycleEventObserver: LifecycleObserver
 
     fun init(activity: Activity, lifecycle: Lifecycle) {
-        this.lifecycle = lifecycle
-
         sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
         moduleImpl.init(activity)
 
@@ -65,7 +65,10 @@ object ShakyTweaks : LifecycleEventObserver {
             activity.startActivity(createTweaksActivityIntent(activity))
         }
 
-        this.lifecycle?.addObserver(this)
+        lifeCycleEventObserver = LifecycleObserver()
+
+        this.lifecycle = lifecycle
+        this.lifecycle.addObserver(lifeCycleEventObserver)
     }
 
     internal fun module(): LibraryModule = moduleImpl
@@ -94,6 +97,28 @@ object ShakyTweaks : LifecycleEventObserver {
         override fun tweakProvider(): TweakProvider = tweakProvider
 
         override fun tweakValueResolver(): TweakValueResolver = tweakValueResolver
+    }
+
+    private class LifecycleObserver : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    sensorManager.registerListener(
+                        shakeDetector,
+                        accelerometer,
+                        SensorManager.SENSOR_DELAY_UI
+                    )
+                }
+                Lifecycle.Event.ON_STOP -> {
+                    sensorManager.unregisterListener(shakeDetector)
+                }
+                Lifecycle.Event.ON_DESTROY -> {
+                    lifecycle.removeObserver(this@LifecycleObserver)
+                }
+                else -> {
+                }
+            }
+        }
     }
 
     /**
@@ -132,26 +157,6 @@ object ShakyTweaks : LifecycleEventObserver {
 
     private fun isKeyPressTimeInThreshold(pastKeyPressMS: Long): Boolean {
         return (Date().time - pastKeyPressMS) <= KEY_PRESS_THRESHOLD
-    }
-
-    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> {
-                sensorManager?.registerListener(
-                    shakeDetector,
-                    accelerometer,
-                    SensorManager.SENSOR_DELAY_UI
-                )
-            }
-            Lifecycle.Event.ON_STOP -> {
-                sensorManager?.unregisterListener(shakeDetector)
-            }
-            Lifecycle.Event.ON_DESTROY -> {
-                lifecycle?.removeObserver(this)
-            }
-            else -> {
-            }
-        }
     }
 }
 
