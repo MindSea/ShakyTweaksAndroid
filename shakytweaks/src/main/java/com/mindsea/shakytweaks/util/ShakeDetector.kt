@@ -30,7 +30,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import java.lang.Math.sqrt
 
-private const val SHAKE_THRESHOLD_GRAVITY = 2.3f
+private const val SHAKE_THRESHOLD_GRAVITY = 2.7f
 private const val SHAKE_SLOPE_TIME_MS = 300
 
 /**
