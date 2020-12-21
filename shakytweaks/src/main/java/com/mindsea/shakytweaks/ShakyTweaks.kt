@@ -24,7 +24,6 @@
 
 package com.mindsea.shakytweaks
 
-import android.app.Activity
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
@@ -55,14 +54,16 @@ object ShakyTweaks {
 
     private lateinit var lifeCycleEventObserver: LifecycleObserver
 
-    fun init(activity: Activity, lifecycle: Lifecycle) {
-        sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    fun init(context: Context, lifecycle: Lifecycle) {
+        val applicationContext = context.applicationContext
+
+        sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        moduleImpl.init(activity)
+        moduleImpl.init(context)
 
         shakeDetector.setListener {
-            activity.startActivity(createTweaksActivityIntent(activity))
+            applicationContext.startActivity(createTweaksActivityIntent(applicationContext))
         }
 
         lifeCycleEventObserver = LifecycleObserver()
