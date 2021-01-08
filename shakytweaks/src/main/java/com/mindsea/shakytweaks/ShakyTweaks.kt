@@ -54,7 +54,7 @@ object ShakyTweaks {
 
     private lateinit var lifeCycleEventObserver: LifecycleObserver
 
-    fun init(context: Context, lifecycle: Lifecycle) {
+    fun init(context: Context) {
         val applicationContext = context.applicationContext
 
         sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -65,7 +65,9 @@ object ShakyTweaks {
         shakeDetector.setListener {
             applicationContext.startActivity(createTweaksActivityIntent(applicationContext))
         }
+    }
 
+    fun register(lifecycle: Lifecycle){
         lifeCycleEventObserver = LifecycleObserver()
 
         this.lifecycle = lifecycle

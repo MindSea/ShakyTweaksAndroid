@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ShakyTweaks.init(this@MainActivity, lifecycle)
+        ShakyTweaks.register(lifecycle)
 
         button.setOnClickListener {
             val intent = Intent(this, SecondActivity::class.java)
