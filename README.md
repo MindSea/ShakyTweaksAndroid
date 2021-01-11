@@ -226,21 +226,13 @@ Next proposed features
 How to migrate from 0.20.4 to 0.21.0?
 -------------------------------------
 
-You need to remove the line bellow from your `Application` class:
-
-```kotlin    
-    ShakyTweaks.init(applicationContext)
-```
-
-After that on your `BaseActivity` class, initialize Shaky Tweaks.
+On your `BaseActivity` class, you need to register the Activity's lifecycle.
 ```kotlin
-class BaseActivity : AppCompatActivity() {
+class BaseActivity : AppCompatActivity {
     override fun onCreate() {
         super.onCreate()
         ...    
-        ShakyTweaks.init(this, lifecycle)
+        ShakyTweaks.register(lifecycle)
     }
+    ...
 }
-```
-
-It is important that your activity extends from `androidx.appcompat.app.AppCompatActivity`.
