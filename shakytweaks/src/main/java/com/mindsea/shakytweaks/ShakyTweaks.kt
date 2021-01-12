@@ -112,7 +112,7 @@ object ShakyTweaks {
                         SensorManager.SENSOR_DELAY_UI
                     )
                 }
-                Lifecycle.Event.ON_STOP -> {
+                Lifecycle.Event.ON_PAUSE -> {
                     sensorManager.unregisterListener(shakeDetector)
                 }
                 Lifecycle.Event.ON_DESTROY -> {
