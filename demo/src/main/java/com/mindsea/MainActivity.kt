@@ -53,11 +53,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        ShakyTweaks.onKeyDown(this, keyCode)
-        return super.onKeyDown(keyCode, event)
-    }
-
     override fun onResume() {
         super.onResume()
         val tweaks = TweakManager.instance
