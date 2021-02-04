@@ -25,11 +25,19 @@
 package com.mindsea
 
 import android.os.Bundle
+import android.view.KeyEvent
+import androidx.appcompat.app.AppCompatActivity
+import com.mindsea.shakytweaks.ShakyTweaks
 
-class SecondActivity : BaseActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_second)
+        ShakyTweaks.register(lifecycle)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        ShakyTweaks.onKeyDown(this, keyCode)
+        return super.onKeyDown(keyCode, event)
     }
 }

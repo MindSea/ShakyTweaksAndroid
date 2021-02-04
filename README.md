@@ -39,14 +39,29 @@ object TweakManager {
 }
 ```
 
-On your `Application` class, initialize Shaky Tweaks
+On your `Application` class, initialize Shaky Tweaks.
+
 ```kotlin
-override fun onCreate() {
+override fun onCreate(){
     super.onCreate()
-    ...    
-    ShakyTweaks.init(applicationContext)
+    ...
+    ShakyTweaks.init(this) 
 }
 ```
+
+On your `BaseActivity` class, initialize Shaky Tweaks.
+```kotlin
+class BaseActivity : AppCompatActivity {
+    override fun onCreate() {
+        super.onCreate()
+        ...    
+        ShakyTweaks.register(lifecycle)
+    }
+    ...
+}
+```
+
+It is important that your activity extends from `androidx.appcompat.app.AppCompatActivity`.
 
 Read the current assigned tweak value
 ```kotlin
@@ -210,3 +225,18 @@ Next proposed features
 ----------------------
 * Implement `stringTweak` and `stringOptionalTweak` to better discriminate where the tweak is is optional or not.
   * experiment generic tweak definition: `tweak<String>` and `tweak<String?>`
+
+
+How to migrate from 0.20.4 to 0.21.0?
+-------------------------------------
+
+On your `BaseActivity` class, you need to register the Activity's lifecycle.
+```kotlin
+class BaseActivity : AppCompatActivity {
+    override fun onCreate() {
+        super.onCreate()
+        ...    
+        ShakyTweaks.register(lifecycle)
+    }
+    ...
+}

@@ -28,6 +28,9 @@ import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.view.KeyEvent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import com.mindsea.shakytweaks.ui.createTweaksActivityIntent
 import com.mindsea.shakytweaks.util.ShakeDetector
 import java.util.*
@@ -36,29 +39,39 @@ private const val SHARED_PREFERENCES_NAME = "shaky_tweaks"
 
 object ShakyTweaks {
 
-    private var isInitialized: Boolean = false
     private val moduleImpl = LibraryModuleImpl()
+
+    private val shakeDetector = ShakeDetector()
 
     private var sKeyPressMS = 0L
     private var tKeyPressMS = 0L
 
     private const val KEY_PRESS_THRESHOLD = 50L
 
+    private lateinit var sensorManager: SensorManager
+    private lateinit var accelerometer: Sensor
+    private lateinit var lifecycle: Lifecycle
+
+    private lateinit var lifeCycleEventObserver: LifecycleObserver
+
     fun init(context: Context) {
-        if (isInitialized) {
-            throw IllegalStateException("Shaky Tweaks must be initialized only once")
-        }
-        isInitialized = true
+        val applicationContext = context.applicationContext
+
+        sensorManager = applicationContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
         moduleImpl.init(context)
-        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        val shakeDetector = ShakeDetector()
         shakeDetector.setListener {
-            context.startActivity(createTweaksActivityIntent(context))
+            applicationContext.startActivity(createTweaksActivityIntent(applicationContext))
         }
+    }
 
-        sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_UI)
+    fun register(lifecycle: Lifecycle){
+        lifeCycleEventObserver = LifecycleObserver()
+
+        this.lifecycle = lifecycle
+        this.lifecycle.addObserver(lifeCycleEventObserver)
     }
 
     internal fun module(): LibraryModule = moduleImpl
@@ -77,13 +90,38 @@ object ShakyTweaks {
         private lateinit var tweakValueResolver: TweakValueResolver
 
         fun init(context: Context) {
-            val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val sharedPreferences = context.getSharedPreferences(
+                SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE
+            )
             tweakValueResolver = TweakValueResolver(tweakProvider, sharedPreferences)
         }
 
         override fun tweakProvider(): TweakProvider = tweakProvider
 
         override fun tweakValueResolver(): TweakValueResolver = tweakValueResolver
+    }
+
+    private class LifecycleObserver : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    sensorManager.registerListener(
+                        shakeDetector,
+                        accelerometer,
+                        SensorManager.SENSOR_DELAY_UI
+                    )
+                }
+                Lifecycle.Event.ON_PAUSE -> {
+                    sensorManager.unregisterListener(shakeDetector)
+                }
+                Lifecycle.Event.ON_DESTROY -> {
+                    lifecycle.removeObserver(this@LifecycleObserver)
+                }
+                else -> {
+                }
+            }
+        }
     }
 
     /**
@@ -123,6 +161,5 @@ object ShakyTweaks {
     private fun isKeyPressTimeInThreshold(pastKeyPressMS: Long): Boolean {
         return (Date().time - pastKeyPressMS) <= KEY_PRESS_THRESHOLD
     }
-
 }
 
