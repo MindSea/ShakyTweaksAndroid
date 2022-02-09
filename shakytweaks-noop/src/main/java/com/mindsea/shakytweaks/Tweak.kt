@@ -58,11 +58,11 @@ fun stringTweak(tweakId: String, group: String, tweakDescription: String, releas
     TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun stringOptionsTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String, vararg otherOptions: String): ReadOnlyProperty<Any, String> =
+fun stringOptionsTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String, defaultTweakValue: String, vararg otherOptions: String): ReadOnlyProperty<Any, String> =
     TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")
-fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: String, @StringRes releaseValue: Int, @StringRes vararg otherOptions: Int): ReadOnlyProperty<Any, Int> =
+fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: String, @StringRes releaseValue: Int, defaultTweakValue: Int, @StringRes vararg otherOptions: Int): ReadOnlyProperty<Any, Int> =
     TweakDefaultValueDelegate(releaseValue)
 
 @Suppress("UNUSED_PARAMETER")

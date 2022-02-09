@@ -91,12 +91,15 @@ class TweakManager {
     )
 
     val server: Int by stringResOptionsTweak(
-        "server",
-        "Server",
-        "Server",
-        R.string.prod_server,
-        R.string.dev_server,
-        R.string.stage_server
+        tweakId = "server",
+        group = "Server",
+        tweakDescription = "Server",
+        defaultTweakValue = R.string.dev_server,
+        releaseValue = R.string.prod_server,
+        otherOptions = intArrayOf(R.string.prod_server,
+            R.string.dev_server,
+            R.string.stage_server
+        )
     )
 
     val messageOptions: String by stringOptionsTweak(
@@ -105,7 +108,8 @@ class TweakManager {
         "Welcome Message",
         "First Welcome Message",
         "Second Welcome Message",
-        "Third Welcome Message"
+        "Third Welcome Message",
+        "Fourth Welcome Message"
     )
 
     fun init(context: Context) {
