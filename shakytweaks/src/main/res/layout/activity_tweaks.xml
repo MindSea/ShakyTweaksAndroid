@@ -37,6 +37,8 @@
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tweaksRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_action_tweak"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

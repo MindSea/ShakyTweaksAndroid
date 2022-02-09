@@ -24,6 +24,7 @@
 
 package com.mindsea.shakytweaks.ui.tweakgroups
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mindsea.shakytweaks.databinding.ItemTweakGroupBinding
@@ -32,7 +33,6 @@ internal class TweakGroupsAdapter : RecyclerView.Adapter<TweakGroupViewHolder>()
 
     private val tweakGroups = mutableListOf<TweakGroup>()
     var onTweakGroupSelected: ((String) -> Unit)? = null
-    lateinit var binding: ItemTweakGroupBinding
 
     fun setTweakGroups(tweakGroups: List<TweakGroup>) {
         this.tweakGroups.clear()
@@ -41,7 +41,7 @@ internal class TweakGroupsAdapter : RecyclerView.Adapter<TweakGroupViewHolder>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TweakGroupViewHolder {
-        binding = ItemTweakGroupBinding.bind(parent)
+        val binding = ItemTweakGroupBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TweakGroupViewHolder(binding)
     }
 
@@ -51,8 +51,7 @@ internal class TweakGroupsAdapter : RecyclerView.Adapter<TweakGroupViewHolder>()
 
     override fun onBindViewHolder(holder: TweakGroupViewHolder, position: Int) {
         val tweakGroup = tweakGroups[position]
-        val binding = ItemTweakGroupBinding.bind(holder.itemView)
-        binding.tweakGroupName.text = tweakGroup.name
+        holder.binding.tweakGroupName.text = tweakGroup.name
         holder.itemView.setOnClickListener {
             onTweakGroupSelected?.invoke(tweakGroup.name)
         }

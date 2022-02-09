@@ -48,7 +48,7 @@ internal class TweakGroupsFragment : Fragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         setHasOptionsMenu(true)
-        binding = FragmentTweakGroupsBinding.inflate(inflater)
+        binding = FragmentTweakGroupsBinding.inflate(inflater, container, false)
         return binding.root
     }
 

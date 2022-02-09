@@ -29,6 +29,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.mindsea.shakytweaks.R
+import com.mindsea.shakytweaks.databinding.ActivityTweaksBinding
 import com.mindsea.shakytweaks.ui.TweakActivitySection.*
 import com.mindsea.shakytweaks.ui.tweakgroups.TweakGroupsFragment
 import com.mindsea.shakytweaks.ui.tweaks.createTweaksFragment
@@ -37,10 +38,13 @@ internal class TweaksActivity : AppCompatActivity(),
     TweakGroupsFragment.TweakGroupsFragmentListener {
 
     private lateinit var viewModel: TweaksActivityViewModel
+    private lateinit var binding: ActivityTweaksBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tweaks)
+        binding = ActivityTweaksBinding.inflate(layoutInflater)
+        val view =  binding.root
+        setContentView(view)
         viewModel = TweaksActivityViewModel()
         supportActionBar?.let {
             it.title = resources.getString(R.string.tweaks_title)

@@ -47,7 +47,7 @@ internal class TweaksFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = FragmentTweaksBinding.inflate(inflater)
+        binding = FragmentTweaksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
