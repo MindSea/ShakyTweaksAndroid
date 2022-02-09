@@ -29,44 +29,47 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
+import com.mindsea.databinding.ActivityMainBinding
 import com.mindsea.shakytweaks.ShakyTweaks
 import com.mindsea.shakytweaks.registerActionTweak
 import com.mindsea.shakytweaks.unregisterActionTweak
-import kotlinx.android.synthetic.main.activity_main.*
 
 private const val localActionKey = "local_action_key"
 
 class MainActivity : BaseActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        button.setOnClickListener {
+        binding.button.setOnClickListener {
             val intent = Intent(this, SecondActivity::class.java)
             startActivity(intent)
         }
 
         registerActionTweak(localActionKey, "Actions", "Display a button") {
             Toast.makeText(this, "Second Activity button visible!", Toast.LENGTH_LONG).show()
-            button.visibility = View.VISIBLE
+            binding.button.visibility = View.VISIBLE
         }
     }
 
     override fun onResume() {
         super.onResume()
         val tweaks = TweakManager.instance
-        booleanTweak.text = "login enabled = ${tweaks.featureFlagEnabled}"
-        numbersTweak.text = """
+        binding.booleanTweak.text = "login enabled = ${tweaks.featureFlagEnabled}"
+        binding.numbersTweak.text = """
             Int = ${tweaks.intTweak}
             Float = ${tweaks.floatTweak}
             Double = ${tweaks.doubleTweak}
             Long = ${tweaks.longTweak}
         """.trimIndent()
-        stringTweak.text = "title = ${tweaks.title}"
+        binding.stringTweak.text = "title = ${tweaks.title}"
         val server = getString(tweaks.server)
-        stringResOptionsTweak.text = "Server = $server"
-        stringOptionsTweak.text = "Message = ${tweaks.messageOptions}"
+        binding.stringResOptionsTweak.text = "Server = $server"
+        binding.stringOptionsTweak.text = "Message = ${tweaks.messageOptions}"
     }
 
     override fun onDestroy() {

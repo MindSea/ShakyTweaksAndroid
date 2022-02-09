@@ -32,11 +32,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.ShakyTweaks
-import kotlinx.android.synthetic.main.fragment_tweak_groups.*
+import com.mindsea.shakytweaks.databinding.FragmentTweakGroupsBinding
 
 internal class TweakGroupsFragment : Fragment() {
 
     private var listener: TweakGroupsFragmentListener? = null
+    private lateinit var binding: FragmentTweakGroupsBinding
     private lateinit var viewModel: TweakGroupsViewModel
     private lateinit var adapter: TweakGroupsAdapter
 
@@ -45,8 +46,10 @@ internal class TweakGroupsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_tweak_groups, container, false)
+        binding = FragmentTweakGroupsBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,8 +100,8 @@ internal class TweakGroupsFragment : Fragment() {
         adapter.onTweakGroupSelected = { groupId ->
             listener?.onGroupSelected(groupId)
         }
-        tweakGroupsRecyclerView.adapter = adapter
-        tweakGroupsRecyclerView.addItemDecoration(
+        binding.tweakGroupsRecyclerView.adapter = adapter
+        binding.tweakGroupsRecyclerView.addItemDecoration(
             DividerItemDecoration(
                 context,
                 DividerItemDecoration.VERTICAL
