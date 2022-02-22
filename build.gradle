@@ -29,7 +29,7 @@ buildscript {
         kotlin_version = '1.5.30'
         libraryCompileSdkVersion = 31
         libraryMinSdkVersion = 17
-        libraryTargetSdkVersion = 31
+        libraryTargetSdkVersion = 28
         libraryPackageName = 'com.mindsea.shakytweaks'
         libraryVersionCode = 20
         libraryVersionName = '0.23.0'
