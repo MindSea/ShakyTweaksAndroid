@@ -189,16 +189,16 @@ fun stringTweak(tweakId: String, group: String, tweakDescription: String, releas
     return StringTweakDelegate(tweakId)
 }
 
-fun stringOptionsTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String, vararg otherOptions: String): ReadOnlyProperty<Any, String> {
-    val options = setOf(releaseValue, *otherOptions)
-    val tweak = Tweak.StringOptionsTweak(tweakId, releaseValue, options, group, tweakDescription)
+fun stringOptionsTweak(tweakId: String, group: String, tweakDescription: String, releaseValue: String, defaultTweakValue: String? = null, vararg otherOptions: String): ReadOnlyProperty<Any, String> {
+    val options = setOfNotNull(releaseValue, defaultTweakValue, *otherOptions)
+    val tweak = Tweak.StringOptionsTweak(tweakId, defaultTweakValue ?: releaseValue, options, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return StringOptionsTweakDelegate(tweakId)
 }
 
-fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: String, @StringRes releaseValue: Int, @StringRes vararg otherOptions: Int): ReadOnlyProperty<Any, Int> {
-    val options = setOf(releaseValue, *otherOptions.toTypedArray())
-    val tweak = Tweak.StringResOptionsTweak(tweakId, releaseValue, options, group, tweakDescription)
+fun stringResOptionsTweak(tweakId: String, group: String, tweakDescription: String, @StringRes releaseValue: Int, defaultTweakValue: Int? = null, @StringRes vararg otherOptions: Int): ReadOnlyProperty<Any, Int> {
+    val options = setOfNotNull(releaseValue, defaultTweakValue, *otherOptions.toTypedArray())
+    val tweak = Tweak.StringResOptionsTweak(tweakId, defaultTweakValue ?: releaseValue, options, group, tweakDescription)
     tweakProvider.storeTweak(tweakId, tweak)
     return StringResOptionsTweakDelegate(tweakId)
 }

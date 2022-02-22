@@ -34,7 +34,7 @@ object TweakManager {
         group = "Group Name",
         tweakDescription = "A description...",
         releaseValue = true, // value for release builds
-        defaultTweakValue = false // value for debug builds
+        defaultTweakValue = false // value for debug builds (optional, defaults to releaseValue if null)
     )
 }
 ```
@@ -170,20 +170,32 @@ val stringValue: String? by stringTweak(
     releaseValue = null,
     defaultTweakValue = "Tweaked"
 )
+```
 
+* String Options
+
+Note that values in releaseValue and defaultTweakValue are automatically added to the list of options. Duplicates are removed via `setOfNotNull`
+
+```kotlin
 val stringResOptionValue: Int by stringResOptionsTweak(
     tweakId = "unique_identifier",
     group = "Group Name",
     tweakDescription = "A description...",
+    defaultTweakValue = R.string.dev_server,
+    releaseValue = R.string.prod_server,
     R.string.prod_server,
     R.string.dev_server,
     R.string.stage_server
 )
+```
 
+```kotlin
 val stringOptionValue: String by stringOptionsTweak(
     tweakId = "unique_identifier",
     group = "Group Name",
     tweakDescription = "A description...",
+    defaultTweakValue = "First Welcome Message",
+    releaseValue = "Second Welcome Message",
     "First Welcome Message",
     "Second Welcome Message",
     "Third Welcome Message"
