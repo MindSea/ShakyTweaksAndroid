@@ -39,6 +39,7 @@ internal class TweakProvider {
         }
         Log.d("ShakyTweaks", "Storing $tweak with key $key")
         tweakMap[key] = tweak
+        tweak.onChange.invoke()
     }
 
     fun removeTweak(tweakId: String) {

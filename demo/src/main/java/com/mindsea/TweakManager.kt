@@ -24,6 +24,7 @@
 
 package com.mindsea
 
+import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
 import com.mindsea.shakytweaks.*
@@ -87,7 +88,10 @@ class TweakManager {
         group = "Strings",
         tweakDescription = "Title of main screen",
         releaseValue = null,
-        defaultTweakValue = "Tweaked"
+        defaultTweakValue = "Tweaked",
+        onChange = {
+            AlertDialog.Builder()
+        }
     )
 
     val server: Int by stringResOptionsTweak(
