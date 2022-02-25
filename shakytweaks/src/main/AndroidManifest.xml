@@ -31,7 +31,8 @@
                 android:name=".ui.TweaksActivity"
                 android:theme="@style/ShakyTweaksTheme"
                 android:screenOrientation="portrait"
-                android:launchMode="singleTop">
+                android:launchMode="singleTop"
+                android:exported="false">
         </activity>
     </application>
 

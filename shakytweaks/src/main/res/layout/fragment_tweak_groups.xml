@@ -24,16 +24,18 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             tools:context=".ui.tweakgroups.TweakGroupsFragment">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/tweaksLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".ui.tweakgroups.TweakGroupsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tweakGroupsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            tools:listitem="@layout/item_tweak_group"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </FrameLayout>

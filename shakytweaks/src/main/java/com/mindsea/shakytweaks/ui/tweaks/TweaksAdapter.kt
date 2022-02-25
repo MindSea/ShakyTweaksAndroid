@@ -34,17 +34,12 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.TweakValueResolver
+import com.mindsea.shakytweaks.databinding.*
 import com.mindsea.shakytweaks.ui.tweaks.TweakItemViewModel.*
-import kotlinx.android.synthetic.main.item_action_tweak.view.*
-import kotlinx.android.synthetic.main.item_boolean_tweak.view.*
-import kotlinx.android.synthetic.main.item_numeric_tweak.view.*
-import kotlinx.android.synthetic.main.item_numeric_tweak.view.tweakDescription
-import kotlinx.android.synthetic.main.item_options_tweak.view.*
-import kotlinx.android.synthetic.main.item_string_tweak.view.*
 
 private const val NUMERIC_VIEW_TYPE = 0
 private const val BOOLEAN_VIEW_TYPE = 1
@@ -63,17 +58,17 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TweakViewHolder {
-        @LayoutRes val layoutId: Int = when (viewType) {
-            NUMERIC_VIEW_TYPE -> R.layout.item_numeric_tweak
-            BOOLEAN_VIEW_TYPE -> R.layout.item_boolean_tweak
-            STRING_VIEW_TYPE -> R.layout.item_string_tweak
-            OPTIONS_VIEW_TYPE -> R.layout.item_options_tweak
-            ACTION_VIEW_TYPE -> R.layout.item_action_tweak
-            else -> throw UnsupportedOperationException("not implemented")
+        val inflater = LayoutInflater.from(parent.context)
+        val binding: ViewBinding = when (viewType) {
+            NUMERIC_VIEW_TYPE -> ItemNumericTweakBinding.inflate(inflater, parent, false)
+            BOOLEAN_VIEW_TYPE -> ItemBooleanTweakBinding.inflate(inflater, parent, false)
+            STRING_VIEW_TYPE -> ItemStringTweakBinding.inflate(inflater, parent, false)
+            OPTIONS_VIEW_TYPE -> ItemOptionsTweakBinding.inflate(inflater, parent, false)
+            ACTION_VIEW_TYPE -> ItemActionTweakBinding.inflate(inflater, parent, false)
+            else -> throw java.lang.UnsupportedOperationException("not implemented")
         }
-
-        val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
-        return TweakViewHolder(view)
+        
+        return TweakViewHolder(binding)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -91,57 +86,55 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TweakViewHolder, position: Int) {
-        val itemViewModel = tweakItemViewModels[position]
-        val itemView = holder.itemView
-
-        when (itemViewModel) {
-            is BooleanTweakViewModel -> bindBooleanTweakView(itemView, itemViewModel)
-            is NumberTweakViewModel -> bindNumberTweakView(itemView, itemViewModel)
-            is StringTweakViewModel -> bindStringTweakView(itemView, itemViewModel)
-            is StringOptionsTweakViewModel -> bindStringOptionsTweakView(itemView, itemViewModel)
-            is StringResOptionsTweakViewModel -> bindStringOptionTweakView(itemView, itemViewModel)
-            is ActionTweakViewModel -> bindActionTweakView(itemView, itemViewModel)
-
+        when (val itemViewModel = tweakItemViewModels[position]) {
+            is BooleanTweakViewModel -> bindBooleanTweakView(holder, itemViewModel)
+            is NumberTweakViewModel -> bindNumberTweakView(holder, itemViewModel)
+            is StringTweakViewModel -> bindStringTweakView(holder, itemViewModel)
+            is StringOptionsTweakViewModel -> bindStringOptionsTweakView(holder, itemViewModel)
+            is StringResOptionsTweakViewModel -> bindStringOptionTweakView(holder, itemViewModel)
+            is ActionTweakViewModel -> bindActionTweakView(holder, itemViewModel)
         }
     }
 
-    private fun bindBooleanTweakView(itemView: View, itemViewModel: BooleanTweakViewModel) {
-        itemView.tweakDescription.text = itemViewModel.description
-        itemView.enabledSwitch.isChecked = itemViewModel.value
-        itemView.enabledSwitch.setOnCheckedChangeListener { _, isChecked ->
+    private fun bindBooleanTweakView(holder: TweakViewHolder, itemViewModel: BooleanTweakViewModel) {
+        val binding = holder.binding as ItemBooleanTweakBinding
+        binding.tweakDescription.text = itemViewModel.description
+        binding.enabledSwitch.isChecked = itemViewModel.value
+        binding.enabledSwitch.setOnCheckedChangeListener { _, isChecked ->
             itemViewModel.setValue(isChecked)
         }
     }
 
-    private fun bindNumberTweakView(itemView: View, itemViewModel: NumberTweakViewModel) {
-        itemView.tweakDescription.text = itemViewModel.description
-        itemView.numericTweakText.setText(itemViewModel.value)
-        itemView.numericTweakText.inputType = when (itemViewModel.allowsDecimals) {
+    private fun bindNumberTweakView(holder: TweakViewHolder, itemViewModel: NumberTweakViewModel) {
+        val binding = holder.binding as ItemNumericTweakBinding
+        binding.tweakDescription.text = itemViewModel.description
+        binding.numericTweakText.setText(itemViewModel.value)
+        binding.numericTweakText.inputType = when (itemViewModel.allowsDecimals) {
             true -> InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             false -> InputType.TYPE_CLASS_NUMBER
         }
         if (itemViewModel.allowsNegativeNumbers) {
-            itemView.numericTweakText.inputType =
-                itemView.numericTweakText.inputType or InputType.TYPE_NUMBER_FLAG_SIGNED
+            binding.numericTweakText.inputType =
+                binding.numericTweakText.inputType or InputType.TYPE_NUMBER_FLAG_SIGNED
         }
-        itemView.incrementButton.setOnClickListener {
+        binding.incrementButton.setOnClickListener {
             itemViewModel.incrementValue()
-            itemView.numericTweakText.setText(itemViewModel.value)
+            binding.numericTweakText.setText(itemViewModel.value)
         }
-        itemView.decrementButton.setOnClickListener {
+        binding.decrementButton.setOnClickListener {
             itemViewModel.decrementValue()
-            itemView.numericTweakText.setText(itemViewModel.value)
+            binding.numericTweakText.setText(itemViewModel.value)
         }
-        itemView.numericTweakText.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+        binding.numericTweakText.setOnFocusChangeListener(object : View.OnFocusChangeListener {
             override fun onFocusChange(v: View?, hasFocus: Boolean) {
                 if (!hasFocus) {
                     (v as? EditText)?.let {
                         try {
                             itemViewModel.setValueFromString(it.text.toString())
                         } catch (e: java.lang.NumberFormatException) {
-                            itemView.numericTweakText.setText(itemViewModel.value)
+                            binding.numericTweakText.setText(itemViewModel.value)
                         } catch (e: TweakValueResolver.TweakValueOutOfRangeException) {
-                            itemView.numericTweakText.setText(itemViewModel.value)
+                            binding.numericTweakText.setText(itemViewModel.value)
                             Toast.makeText(
                                 it.context, when (e.thresholdType) {
                                     TweakValueResolver.TweakValueOutOfRangeException.ThresholdType.MAX -> it.context.getString(
@@ -164,10 +157,11 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
         })
     }
 
-    private fun bindStringTweakView(itemView: View, itemViewModel: StringTweakViewModel) {
-        itemView.tweakDescription.text = itemViewModel.description
-        itemView.tweakText.setText(itemViewModel.value)
-        itemView.tweakText.addTextChangedListener(object : TextWatcher {
+    private fun bindStringTweakView(holder: TweakViewHolder, itemViewModel: StringTweakViewModel) {
+        val binding = holder.binding as ItemStringTweakBinding
+        binding.tweakDescription.text = itemViewModel.description
+        binding.tweakText.setText(itemViewModel.value)
+        binding.tweakText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // Do nothing
             }
@@ -194,11 +188,12 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
     }
 
     private fun bindStringOptionsTweakView(
-        itemView: View,
+        holder: TweakViewHolder,
         itemViewModel: StringOptionsTweakViewModel
     ) {
-        val context = itemView.context
-        itemView.tweakDescription.text = itemViewModel.description
+        val context = holder.itemView.context
+        val binding = holder.binding as ItemOptionsTweakBinding
+        binding.tweakDescription.text = itemViewModel.description
         val radioButtons = itemViewModel.options.map { option ->
             RadioButton(context).apply {
                 id = View.generateViewId()
@@ -207,10 +202,10 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
         }
         val viewIds = radioButtons.map { it.id }
         radioButtons.forEach { radioButton ->
-            itemView.tweakOptions.addView(radioButton)
+            binding.tweakOptions.addView(radioButton)
         }
-        itemView.tweakOptions.check(viewIds[itemViewModel.selectedIndex])
-        itemView.tweakOptions.setOnCheckedChangeListener { _, checkedId ->
+        binding.tweakOptions.check(viewIds[itemViewModel.selectedIndex])
+        binding.tweakOptions.setOnCheckedChangeListener { _, checkedId ->
             val index = viewIds.indexOf(checkedId)
             itemViewModel.setValueAtIndex(index)
         }
@@ -218,11 +213,12 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
 
     @SuppressLint("ResourceType")
     private fun bindStringOptionTweakView(
-        itemView: View,
+        holder: TweakViewHolder,
         itemViewModel: StringResOptionsTweakViewModel
     ) {
-        val context = itemView.context
-        itemView.tweakDescription.text = itemViewModel.description
+        val context = holder.itemView.context
+        val binding = holder.binding as ItemOptionsTweakBinding
+        binding.tweakDescription.text = itemViewModel.description
         val radioButtons = itemViewModel.options.map { stringId ->
             RadioButton(context).apply {
                 id = View.generateViewId()
@@ -231,21 +227,22 @@ internal class TweaksAdapter : RecyclerView.Adapter<TweakViewHolder>() {
         }
         val viewIds = radioButtons.map { it.id }
         radioButtons.forEach { radioButton ->
-            itemView.tweakOptions.addView(radioButton)
+            binding.tweakOptions.addView(radioButton)
         }
-        itemView.tweakOptions.check(viewIds[itemViewModel.selectedIndex])
-        itemView.tweakOptions.setOnCheckedChangeListener { _, checkedId ->
+        binding.tweakOptions.check(viewIds[itemViewModel.selectedIndex])
+        binding.tweakOptions.setOnCheckedChangeListener { _, checkedId ->
             val index = viewIds.indexOf(checkedId)
             itemViewModel.setValueAtIndex(index)
         }
     }
 
-    private fun bindActionTweakView(itemView: View, itemViewModel: ActionTweakViewModel) {
-        itemView.tweakDescription.text = itemViewModel.description
-        itemView.actionButton.setOnClickListener {
+    private fun bindActionTweakView(holder: TweakViewHolder, itemViewModel: ActionTweakViewModel) {
+        val binding = holder.binding as ItemActionTweakBinding
+        binding.tweakDescription.text = itemViewModel.description
+        binding.actionButton.setOnClickListener {
             itemViewModel.value.invoke()
         }
     }
 }
 
-internal class TweakViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+internal class TweakViewHolder(val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root)

@@ -34,18 +34,21 @@ import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.mindsea.shakytweaks.R
 import com.mindsea.shakytweaks.ShakyTweaks
-import kotlinx.android.synthetic.main.fragment_tweaks.*
+import com.mindsea.shakytweaks.databinding.FragmentTweaksBinding
 import java.lang.IllegalStateException
 
 private const val TWEAK_GROUP_ARG_PARAM = "TweaksFragment.tweak_group"
 
 internal class TweaksFragment : Fragment() {
 
+    private lateinit var binding: FragmentTweaksBinding
     private lateinit var viewModel: TweaksViewModel
     private lateinit var adapter: TweaksAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_tweaks, container, false)
+        super.onCreateView(inflater, container, savedInstanceState)
+        binding = FragmentTweaksBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,8 +71,8 @@ internal class TweaksFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = TweaksAdapter()
-        tweaksRecyclerView.adapter = adapter
-        tweaksRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        binding.tweaksRecyclerView.adapter = adapter
+        binding.tweaksRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
 }
